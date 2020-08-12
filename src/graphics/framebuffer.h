@@ -1,0 +1,39 @@
+#ifndef __pandasdl_framebuffer_h__
+#define __pandasdl_framebuffer_h__
+
+#include <iostream>
+#include <memory>
+
+#include "../../lib_include/GLEW/glew.h"
+#include <GL/gl.h>
+
+#include "texture_2D.h"
+#include "../general/game.h"
+#include "spritebatch.h"
+#include "shader.h"
+
+namespace PandaSDL
+{
+    // forward declarations
+    class Game;
+    
+    class Framebuffer
+    {
+        public:
+            Framebuffer();
+            ~Framebuffer();
+
+            void Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL::Texture2D> target);
+            void End();
+
+        protected:
+            bool _deleted;
+            unsigned int _id;
+            std::shared_ptr<PandaSDL::Texture2D> _target;
+            PandaSDL::Game* _game;
+
+            void Free();
+    };
+}
+
+#endif
