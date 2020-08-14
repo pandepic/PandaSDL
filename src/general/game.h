@@ -46,7 +46,12 @@ namespace PandaSDL
             void Clear();
             void Clear(PandaSDL::Color color);
             
+            void EnableBlend(GLenum sfactor = GL_SRC_ALPHA, GLenum dfactor = GL_ONE_MINUS_SRC_ALPHA);
+            void EnableDepth(GLenum func = GL_LESS);
+            
             PandaSDL::Rectangle GetWindowRect();
+            bool GetDepthEnabled();
+            bool GetBlendEnabled();
             
             virtual void Load() = 0;
             virtual void Update(const PandaSDL::Timer& gameTimer) = 0;
@@ -69,7 +74,11 @@ namespace PandaSDL
             static PandaSDL::GameControlManager GameControlManager;
 
         protected:
-            bool _quit = false;
+            bool _quit;
+            
+            bool _blendEnabled;
+            bool _depthEnabled;
+            unsigned int _clearFlags;
 
             // manage framerate
             unsigned int _frameCounter = 0;

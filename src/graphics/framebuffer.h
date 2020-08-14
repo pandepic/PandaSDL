@@ -31,6 +31,10 @@ namespace PandaSDL
             unsigned int _id;
             std::shared_ptr<PandaSDL::Texture2D> _target;
             PandaSDL::Game* _game;
+            
+            bool _depthEnabled;
+            bool _depthBufferDeleted;
+            unsigned int _depthBufferID;
 
             void Free();
     };

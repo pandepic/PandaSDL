@@ -10,13 +10,13 @@ std::string PandaSDL::Spritebatch::DefaultSpriteShaderVertexCode =
 "out vec2 fTexCoords;\n"
 "out vec4 fColour;\n"
 
-"uniform mat4 projectionView;\n"
+"uniform mat4 mProjectionView;\n"
 
 "void main()\n"
 "{\n"
 "    fTexCoords = vTexCoords;\n"
 "    fColour = vColour;\n"
-"    gl_Position = projectionView * vec4(vPosition.x, vPosition.y, 0.0, 1.0);\n"
+"    gl_Position = mProjectionView * vec4(vPosition.x, vPosition.y, 0.0, 1.0);\n"
 "}\n";
 
 std::string PandaSDL::Spritebatch::DefaultSpriteShaderFragmentCode =
@@ -362,7 +362,7 @@ void PandaSDL::Spritebatch::End()
     auto textureID = 0;
 
     _spriteShader->Use();
-    _spriteShader->SetMatrix4("projectionView", _projection * _currentBatchTransform);
+    _spriteShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
 
     for (const auto &batchItem : _currentBatch)
     {

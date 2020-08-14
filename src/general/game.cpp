@@ -9,7 +9,7 @@ PandaSDL::GameControlManager PandaSDL::Game::GameControlManager = PandaSDL::Game
 PandaSDL::Game* PandaSDL::Game::GameInstance = nullptr;
 
 PandaSDL::Game::Game()
-    : CurrentGamestate(nullptr), NextGamestate(nullptr)
+    : CurrentGamestate(nullptr), NextGamestate(nullptr), _quit(false), _depthEnabled(false), _blendEnabled(false), _clearFlags(GL_COLOR_BUFFER_BIT)
 {
 }
 
@@ -68,9 +68,6 @@ void PandaSDL::Game::Setup(PandaSDL::Game* gameInstance, std::string windowName,
     _glContext = SDL_GL_CreateContext(_window.get());
     
     ResetViewport();
-    
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     
     SetClearColor(PandaSDL::Color(0, 0, 0, 255));
     
@@ -236,7 +233,7 @@ void PandaSDL::Game::SetClearColor(PandaSDL::Color color)
 
 void PandaSDL::Game::Clear()
 {
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(_clearFlags);
 }
 
 void PandaSDL::Game::Clear(PandaSDL::Color color)
@@ -244,13 +241,47 @@ void PandaSDL::Game::Clear(PandaSDL::Color color)
     auto prevColor = _windowClearColor;
 
     SetClearColor(color);
-    glClear(GL_COLOR_BUFFER_BIT);
+    Clear();
     SetClearColor(prevColor);
 }
 
 PandaSDL::Rectangle PandaSDL::Game::GetWindowRect()
 {
     return _windowRect;
+}
+
+void PandaSDL::Game::EnableBlend(GLenum sfactor, GLenum dfactor)
+{
+    if (_blendEnabled)
+        return;
+    
+    glEnable(GL_BLEND);
+    glBlendFunc(sfactor, dfactor);
+    
+    _depthEnabled = true;
+}
+
+void PandaSDL::Game::EnableDepth(GLenum func)
+{
+    if (_depthEnabled)
+        return;
+    
+    glEnable(GL_DEPTH_TEST);
+    glDepthFunc(func);
+    glClear(GL_DEPTH_BUFFER_BIT);
+    
+    _clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+    _depthEnabled = true;
+}
+
+bool PandaSDL::Game::GetDepthEnabled()
+{
+    return _depthEnabled;
+}
+
+bool PandaSDL::Game::GetBlendEnabled()
+{
+    return _blendEnabled;
 }
 
 void GLAPIENTRY PandaSDL::Game::GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)

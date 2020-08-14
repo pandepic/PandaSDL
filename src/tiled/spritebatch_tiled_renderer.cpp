@@ -29,10 +29,13 @@ void PandaSDL::SpritebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, 
     auto drawLayers = below ? &_belowLayers : &_aboveLayers;
     auto cameraView = camera.GetViewRect() - worldOffset;
     
-    int loopX = (cameraView.X / camera.Zoom) / (int)(_tileWidth * camera.Zoom);
-    int loopY = (cameraView.Y / camera.Zoom) / (int)(_tileHeight * camera.Zoom);
-    int loopWidth = ((cameraView.X / camera.Zoom) + (cameraView.Width / camera.Zoom)) / (int)(_tileWidth * camera.Zoom);
-    int loopHeight = ((cameraView.Y / camera.Zoom) + (cameraView.Height / camera.Zoom)) / (int)(_tileHeight * camera.Zoom);
+    auto cameraWidth = cameraView.Width / camera.Zoom;
+    auto cameraHeight = cameraView.Height / camera.Zoom;
+    
+    int loopX = cameraView.X / (int)_tileWidth;
+    int loopY = cameraView.Y / (int)_tileHeight;
+    int loopWidth = (cameraView.X + cameraWidth) / (int)_tileWidth;
+    int loopHeight = (cameraView.Y + cameraHeight) / (int)_tileHeight;
     
     int padding = 2;
     
@@ -42,6 +45,8 @@ void PandaSDL::SpritebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, 
     loopHeight += padding * 2;
     
     auto tilesheetWidth = _tilesheet->GetWidth();
+    
+    auto drawnTiles = 0;
     
     for (const auto &layer : *drawLayers)
     {
@@ -62,8 +67,8 @@ void PandaSDL::SpritebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, 
                 if (tileID == 0)
                     continue;
                 
-                tilePos.X = x * (_tileWidth * camera.Zoom);
-                tilePos.Y = y * (_tileHeight * camera.Zoom);
+                tilePos.X = x * _tileWidth;
+                tilePos.Y = y * _tileHeight;
                 tilePos += worldOffset;
                 
                 auto sheetX = ((tileID - 1) % (tilesheetWidth / _tileWidth)) * _tileWidth;

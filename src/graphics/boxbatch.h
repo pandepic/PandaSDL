@@ -23,11 +23,23 @@
 #include "color.h"
 #include "texture_2D.h"
 
+#define PANDASDL_BOX_SIDES 6
+
 namespace PandaSDL
 {
-	struct SpriteBatchItem
+	enum class eBoxSide
+	{
+		TOP,
+		BOTTOM,
+		FRONT,
+		BACK,
+		LEFT,
+		RIGHT
+	};
+	
+	struct BoxBatchItem
     {
-        std::shared_ptr<PandaSDL::Texture2D> Texture;
+        std::shared_ptr<PandaSDL::Texture2D> Texture[PANDASDL_BOX_SIDES];
         //Rectangle SourceRect;
         Vector3 Position;
         Color Color;
@@ -42,10 +54,10 @@ namespace PandaSDL
 			~Boxbatch();
 			
 			static std::shared_ptr<Shader> DefaultBoxShader;
-            
+			
             static std::string DefaultBoxShaderVertexCode;
             static std::string DefaultBoxShaderFragmentCode;
-
+			
 		protected:
 	};
 }
