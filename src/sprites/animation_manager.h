@@ -1,12 +1,6 @@
 #ifndef __pandasdl_animationmanager_h__
 #define __pandasdl_animationmanager_h__
 
-#include <iostream>
-#include <map>
-#include <memory>
-#include <sstream>
-#include <fstream>
-
 #include "../../lib_include/pugixml/pugixml.hpp"
 
 #include "../general/globals.h"

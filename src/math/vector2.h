@@ -1,8 +1,6 @@
 #ifndef __pandasdl_point_h__
 #define __pandasdl_point_h__
 
-#include <string>
-
 namespace PandaSDL
 {
     struct Vector2

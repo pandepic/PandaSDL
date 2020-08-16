@@ -1,8 +1,6 @@
 #ifndef __pandasdl_vector3_h__
 #define __pandasdl_vector3_h__
 
-#include <string>
-
 namespace PandaSDL
 {
     struct Vector3

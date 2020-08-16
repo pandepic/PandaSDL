@@ -1,10 +1,6 @@
 #ifndef __pandasdl_layeredsprite_h__
 #define __pandasdl_layeredsprite_h__
 
-#include <iostream>
-#include <vector>
-#include <memory>
-
 #include "../general/game.h"
 #include "../graphics/framebuffer.h"
 #include "../graphics/spritebatch.h"

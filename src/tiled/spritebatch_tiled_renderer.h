@@ -1,10 +1,6 @@
 #ifndef __pandasdl_spritebatchtiledrenderer_h__
 #define __pandasdl_spritebatchtiledrenderer_h__
 
-#include <memory>
-#include <vector>
-#include <math.h>
-
 #include "../general/game.h"
 #include "../general/camera_2D.h"
 #include "../graphics/spritebatch.h"

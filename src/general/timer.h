@@ -1,7 +1,6 @@
 #ifndef __pandasdl_timer_h__
 #define __pandasdl_timer_h__
 
-#include <iostream>
 #include "../../lib_include/SDL2/SDL.h"
 
 namespace PandaSDL

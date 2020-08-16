@@ -3,11 +3,6 @@
 
 #include "../../lib_include/pugixml/pugixml.hpp"
 
-#include <iostream>
-#include <map>
-#include <memory>
-#include <vector>
-
 #include "../general/extensions.h"
 #include "../general/globals.h"
 

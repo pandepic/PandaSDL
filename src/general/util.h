@@ -1,7 +1,6 @@
 #ifndef __pandasdl_util_h__
 #define __pandasdl_util_h__
 
-#include <memory>
 #include "../../lib_include/SDL2/SDL.h"
 
 namespace PandaSDL

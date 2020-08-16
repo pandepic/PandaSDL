@@ -3,12 +3,6 @@
 
 #include "../../lib_include/pugixml/pugixml.hpp"
 
-#include <iostream>
-#include <map>
-#include <memory>
-#include <sstream>
-#include <fstream>
-
 #include "../general/globals.h"
 #include "../graphics/texture_2D.h"
 #include "../graphics/shader.h"

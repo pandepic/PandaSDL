@@ -1,11 +1,6 @@
 #ifndef __pandasdl_spritefont_h__
 #define __pandasdl_spritefont_h__
 
-#include <iostream>
-#include <map>
-#include <memory>
-#include <vector>
-
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

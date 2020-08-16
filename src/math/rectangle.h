@@ -1,8 +1,6 @@
 #ifndef __pandasdl_rectangle_h__
 #define __pandasdl_rectangle_h__
 
-#include <string>
-
 #include "vector2.h"
 
 namespace PandaSDL

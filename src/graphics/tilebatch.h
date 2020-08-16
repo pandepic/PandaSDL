@@ -1,10 +1,6 @@
 #ifndef __pandasdl_tilebatch_h__
 #define __pandasdl_tilebatch_h__
 
-#include <iostream>
-#include <memory>
-#include <vector>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 

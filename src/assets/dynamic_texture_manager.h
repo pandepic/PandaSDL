@@ -1,10 +1,6 @@
 #ifndef __dynamictexturemanager_h__
 #define __dynamictexturemanager_h__
 
-#include <iostream>
-#include <memory>
-#include <map>
-
 #include "../general/globals.h"
 #include "../graphics/texture_2D.h"
 

@@ -1,9 +1,6 @@
 #ifndef __pandasdl_animatedsprite_h__
 #define __pandasdl_animatedsprite_h__
 
-#include <iostream>
-#include <memory>
-
 #include "sprite.h"
 #include "animation.h"
 

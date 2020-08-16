@@ -1,11 +1,6 @@
 #ifndef __pandasdl_spritebatch_h__
 #define __pandasdl_spritebatch_h__
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <map>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 

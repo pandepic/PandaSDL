@@ -1,10 +1,6 @@
 #ifndef __pandasdl_globals_h__
 #define __pandasdl_globals_h__
 
-#include <iostream>
-#include <stdexcept>
-#include <map>
-
 #define PANDASDL_UNLIMITED_FPS -1
 #define PANDASDL_VSYNC_ON true
 #define PANDASDL_VSYNC_OFF false

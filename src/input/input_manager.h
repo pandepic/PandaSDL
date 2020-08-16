@@ -1,10 +1,6 @@
 #ifndef __pandasdl_inputmanager_h__
 #define __pandasdl_inputmanager_h__
 
-#include <iostream>
-#include <vector>
-#include <algorithm>
-
 #include "../general/globals.h"
 #include "../general/timer.h"
 #include "../math/vector2.h"

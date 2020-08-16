@@ -1,9 +1,6 @@
 #ifndef __pandasdl_framebuffer_h__
 #define __pandasdl_framebuffer_h__
 
-#include <iostream>
-#include <memory>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 

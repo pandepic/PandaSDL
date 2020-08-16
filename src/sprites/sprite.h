@@ -1,9 +1,6 @@
 #ifndef __pandasdl_sprite_h__
 #define __pandasdl_sprite_h__
 
-#include <iostream>
-#include <memory>
-
 #include "../general/globals.h"
 #include "../assets/asset_manager.h"
 #include "../graphics/texture_2D.h"

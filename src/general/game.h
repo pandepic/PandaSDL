@@ -1,11 +1,6 @@
 #ifndef __pandasdl_game_h__
 #define __pandasdl_game_h__
 
-#include <iostream>
-#include <memory>
-#include <functional>
-#include <string>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 

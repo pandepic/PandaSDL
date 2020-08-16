@@ -1,10 +1,6 @@
 #ifndef __pandasdl_gamecontrolmanager_h__
 #define __pandasdl_gamecontrolmanager_h__
 
-#include <iostream>
-#include <vector>
-#include <map>
-
 #include "../general/game.h"
 #include "input_manager.h"
 #include "../general/extensions.h"

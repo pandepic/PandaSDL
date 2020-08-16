@@ -1,9 +1,6 @@
 #ifndef __pandasdl_gamestate_h__
 #define __pandasdl_gamestate_h__
 
-#include <iostream>
-#include <memory>
-
 #include "game.h"
 
 namespace PandaSDL

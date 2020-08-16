@@ -7,10 +7,6 @@
 
 #include "../../lib_include/pugixml/pugixml.hpp"
 
-#include <iostream>
-#include <vector>
-#include <memory>
-
 #include "../general/globals.h"
 #include "../general/extensions.h"
 

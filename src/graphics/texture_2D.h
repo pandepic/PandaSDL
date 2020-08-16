@@ -1,8 +1,6 @@
 #ifndef __pandasdl_texture2d_h__
 #define __pandasdl_texture2d_h__
 
-#include <iostream>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 

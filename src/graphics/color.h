@@ -1,8 +1,6 @@
 #ifndef __pandasdl_color_h__
 #define __pandasdl_color_h__
 
-#include <iostream>
-
 #define PANDASDL_COLOR_TRANSPARENT PandaSDL::Color(0, 0, 0, 0)
 #define PANDASDL_COLOR_WHITE PandaSDL::Color(255, 255, 255, 255)
 #define PANDASDL_COLOR_BLACK PandaSDL::Color(0, 0, 0, 255)

@@ -5,11 +5,6 @@
 	Batch render 3D textured boxes
 */
 
-#include <iostream>
-#include <vector>
-#include <memory>
-#include <map>
-
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 
