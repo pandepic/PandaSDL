@@ -208,8 +208,8 @@ void PandaSDL::Tilebatch::EndLayer(bool below)
             
             bufferIndex += 2;
             
-            _dataArray[index].X = 0;
-            _dataArray[index].Y = 0;
+            _dataArray[index].X = 255;
+            _dataArray[index].Y = 255;
         }
     }
     
