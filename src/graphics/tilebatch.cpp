@@ -19,7 +19,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderVertexCode =
 "uniform vec2 viewOffset;\n"
 "uniform vec2 viewportSize;\n"
 "uniform vec2 inverseTileTextureSize;\n"
-"uniform float inverseTileSize;\n"
+"uniform vec2 inverseTileSize;\n"
 
 "void main()\n"
 "{\n"
@@ -40,7 +40,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 
 "uniform vec2 inverseTileTextureSize;\n"
 "uniform vec2 inverseSpriteTextureSize;\n"
-"uniform float tileSize;\n"
+"uniform vec2 tileSize;\n"
 
 "void main()\n"
 "{\n"
@@ -55,7 +55,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 
 PandaSDL::Tilebatch::Tilebatch()
     : _dataAllocated(false), _dataArray(nullptr), _width(0), _height(0), _currentLayerEnded(true), _setup(false), _tileScale(1.0f),
-    _tileSize(0), _inverseTileSize(0)
+    _tileSize(0, 0), _inverseTileSize(0, 0)
 {
 }
 
@@ -83,9 +83,8 @@ void PandaSDL::Tilebatch::Setup()
     _viewportSize = { windowRect.Width, windowRect.Height };
     _scaledViewportSize = _viewportSize; // todo : handle camera zoom for scale
     
-    // todo : support both width and height sizes
-    _tileSize = _tileWidth;
-    _inverseTileSize = 1.0f / _tileSize;
+    _tileSize = { _tileWidth, _tileHeight };
+    _inverseTileSize = { 1.0f / _tileWidth, 1.0f / _tileHeight };
     
     float vertices[] = {
         // triangle 1
@@ -241,8 +240,8 @@ void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below, float sca
     
     _tileShader->SetVector2f("viewportSize", _scaledViewportSize);
     _tileShader->SetVector2f("inverseSpriteTextureSize", _inverseSpriteTextureSize);
-    _tileShader->SetFloat("tileSize", _tileSize);
-    _tileShader->SetFloat("inverseTileSize", _inverseTileSize);
+    _tileShader->SetVector2f("tileSize", _tileSize);
+    _tileShader->SetVector2f("inverseTileSize", _inverseTileSize);
     _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale * scale), floor(position.Y * _tileScale * scale) });
     _tileShader->SetInteger("atlasImage", 0);
     _tileShader->SetInteger("dataImage", 1);

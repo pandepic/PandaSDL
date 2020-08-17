@@ -64,7 +64,7 @@ namespace PandaSDL
             std::shared_ptr<Shader> _tileShader;
             
             float _tileScale;
-            float _tileSize, _inverseTileSize;
+            glm::vec2 _tileSize, _inverseTileSize;
             glm::vec2 _viewportSize, _scaledViewportSize;
             glm::vec2 _inverseSpriteTextureSize;
             
