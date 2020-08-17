@@ -57,23 +57,6 @@ PandaSDL::Tilebatch::Tilebatch()
     : _dataAllocated(false), _dataArray(nullptr), _width(0), _height(0), _currentLayerEnded(true), _setup(false), _tileScale(1.0f),
     _tileSize(0), _inverseTileSize(0)
 {
-    float vertices[] = {
-        // triangle 1
-        // x, y, u, v
-        -1.0f, -1.0f, 0.0f, 1.0f,
-        1.0f, -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f,
-
-        // triangle 2
-        -1.0f, -1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 0.0f,
-        -1.0f, 1.0f, 0.0f, 0.0f
-    };
-
-    for (auto i = 0; i < PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT; i++)
-    {
-        _templateVertexBuffer[i] = vertices[i];
-    }
 }
 
 PandaSDL::Tilebatch::~Tilebatch()
@@ -117,11 +100,6 @@ void PandaSDL::Tilebatch::Setup()
         -1.0f, 1.0f, 0.0f, 0.0f
     };
 
-    for (auto i = 0; i < PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT; i++)
-    {
-        _templateVertexBuffer[i] = vertices[i];
-    }
-    
     glGenVertexArrays(1, &_VAO);
     glGenBuffers(1, &_VBO);
 
@@ -136,7 +114,7 @@ void PandaSDL::Tilebatch::Setup()
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(attribSize * 1));
     glEnableVertexAttribArray(1);
     
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT, &_templateVertexBuffer[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT, vertices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
@@ -212,7 +190,7 @@ void PandaSDL::Tilebatch::SetTileAtIndex(unsigned int index, unsigned int tileIn
 void PandaSDL::Tilebatch::EndLayer(bool below)
 {
     if (!_dataAllocated)
-        return; // throw exception
+        return; // todo : throw exception?
     
     PandaSDL::TilebatchLayer newLayer;
     newLayer.IsBelow = below;
