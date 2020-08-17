@@ -252,18 +252,20 @@ void PandaSDL::Tilebatch::EndBuild(bool below)
     ClearData();
 }
 
-void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below)
+void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below, float scale)
 {
     _tileShader->Use();
     
     glBindVertexArray(_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
     
+    _scaledViewportSize = { _viewportSize.x / scale, _viewportSize.y / scale };
+    
     _tileShader->SetVector2f("viewportSize", _scaledViewportSize);
     _tileShader->SetVector2f("inverseSpriteTextureSize", _inverseSpriteTextureSize);
     _tileShader->SetFloat("tileSize", _tileSize);
     _tileShader->SetFloat("inverseTileSize", _inverseTileSize);
-    _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale), floor(position.Y * _tileScale) });
+    _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale * scale), floor(position.Y * _tileScale * scale) });
     _tileShader->SetInteger("atlasImage", 0);
     _tileShader->SetInteger("dataImage", 1);
     

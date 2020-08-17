@@ -81,8 +81,6 @@ void PandaSDL::Spritebatch::Setup(int screenWidth, int screenHeight, bool invert
 
     _spriteShader->Use().SetInteger("image", 0);
 
-    glActiveTexture(GL_TEXTURE0);
-
     glGenVertexArrays(1, &_VAO);
     glGenBuffers(1, &_VBO);
 
@@ -363,6 +361,8 @@ void PandaSDL::Spritebatch::End()
 
     _spriteShader->Use();
     _spriteShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
+    
+    glActiveTexture(GL_TEXTURE0);
 
     for (const auto &batchItem : _currentBatch)
     {

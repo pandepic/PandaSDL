@@ -43,7 +43,7 @@ void PandaSDL::TilebatchTiledRenderer::Setup(std::shared_ptr<PandaSDL::TiledMap>
 
 void PandaSDL::TilebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, bool below)
 {
-    _tilebatch->Draw({ camera.GetPosition().X, camera.GetPosition().Y }, below);
+    _tilebatch->Draw({ camera.GetPosition().X, camera.GetPosition().Y }, below, camera.Zoom);
 }
 
 void PandaSDL::TilebatchTiledRenderer::BuildTilebatchLayer(const std::shared_ptr<PandaSDL::TiledMapLayer> &layer, bool below)

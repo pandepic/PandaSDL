@@ -43,7 +43,7 @@ namespace PandaSDL
             void EndLayer(bool below);
             void EndBuild(bool below = true);
             
-            void Draw(PandaSDL::Vector2 position, bool below);
+            void Draw(PandaSDL::Vector2 position, bool below, float scale = 1.0f);
             
             unsigned int GetWidth();
             unsigned int GetHeight();
