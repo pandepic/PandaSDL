@@ -13,6 +13,7 @@
 #include <sstream>
 #include <fstream>
 #include <algorithm>
+#include <math.h>
 
 #include <vector>
 #include <array>

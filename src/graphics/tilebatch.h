@@ -35,7 +35,7 @@ namespace PandaSDL
             std::vector<PandaSDL::TilebatchLayer> Layers;
             std::shared_ptr<PandaSDL::Texture2D> AtlasTexture;
             
-            void BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture);
+            void BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader = DefaultTileShader);
             void SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned char x, unsigned char y);
             void SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned int tileIndex);
             void SetTileAtIndex(unsigned int index, unsigned char x, unsigned char y);
@@ -54,20 +54,26 @@ namespace PandaSDL
             static bool DefaultShaderInitialised;
             
         protected:
+            bool _setup;
             bool _currentLayerEnded;
             unsigned int _width, _height;
             unsigned int _tileWidth, _tileHeight;
+            unsigned int _tilesheetTilesWidth, _tilesheetTilesHeight;
             
             GLuint _VAO, _VBO;
+            std::shared_ptr<Shader> _tileShader;
             
-            glm::vec2 _inverseTileSize;
-            glm::vec2 _scaledViewportSize;
+            float _tileScale;
+            float _tileSize, _inverseTileSize;
+            glm::vec2 _viewportSize, _scaledViewportSize;
+            glm::vec2 _inverseSpriteTextureSize;
             
             TileTextureData* _dataArray;
             bool _dataAllocated;
             
             float _templateVertexBuffer[PANDASDL_QUAD_VERTEX_FLOAT_COUNT];
             
+            void Setup();
             void CheckDefaultShader();
             void ClearData();
     };

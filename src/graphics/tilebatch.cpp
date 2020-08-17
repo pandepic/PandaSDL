@@ -25,7 +25,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderVertexCode =
 "{\n"
 "   pixelCoord = (texture * viewportSize) + viewOffset;\n"
 "   texCoord = pixelCoord * inverseTileTextureSize * inverseTileSize;\n"
-"   gl_Position = vec4(position, 0.0, 1.0);\n"
+"   gl_Position = vec4(position, -1.0, 1.0);\n"
 "}\n";
 
 std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
@@ -40,10 +40,12 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 
 "uniform vec2 inverseTileTextureSize;\n"
 "uniform vec2 inverseSpriteTextureSize;\n"
-"uniform vec2 tileSize;\n"
+"uniform float tileSize;\n"
 
 "void main()\n"
 "{\n"
+"   if(texCoord.x < 0 || texCoord.y < 0) { discard; }\n"
+"   if(texCoord.x > 1 || texCoord.y > 1) { discard; }\n"
 "   vec4 tile = texture(dataImage, texCoord);\n"
 "   if(tile.x == 1.0 && tile.y == 1.0) { discard; }\n"
 "   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n"
@@ -52,7 +54,8 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 "}\n";
 
 PandaSDL::Tilebatch::Tilebatch()
-    : _dataAllocated(false), _dataArray(nullptr), _width(0), _height(0), _currentLayerEnded(true)
+    : _dataAllocated(false), _dataArray(nullptr), _width(0), _height(0), _currentLayerEnded(true), _setup(false), _tileScale(1.0f),
+    _tileSize(0), _inverseTileSize(0)
 {
     float vertices[] = {
         // triangle 1
@@ -88,7 +91,60 @@ void PandaSDL::Tilebatch::ClearData()
     }
 }
 
-void PandaSDL::Tilebatch::BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture)
+void PandaSDL::Tilebatch::Setup()
+{
+    if (_setup)
+        return;
+    
+    auto windowRect = PandaSDL::Game::GameInstance->GetWindowRect();
+    _viewportSize = { windowRect.Width, windowRect.Height };
+    _scaledViewportSize = _viewportSize; // todo : handle camera zoom for scale
+    
+    // todo : support both width and height sizes
+    _tileSize = _tileWidth;
+    _inverseTileSize = 1.0f / _tileSize;
+    
+    float vertices[] = {
+        // triangle 1
+        // x, y, u, v
+        -1.0f, -1.0f, 0.0f, 1.0f,
+        1.0f, -1.0f, 1.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 0.0f,
+
+        // triangle 2
+        -1.0f, -1.0f, 0.0f, 1.0f,
+        1.0f, 1.0f, 1.0f, 0.0f,
+        -1.0f, 1.0f, 0.0f, 0.0f
+    };
+
+    for (auto i = 0; i < PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT; i++)
+    {
+        _templateVertexBuffer[i] = vertices[i];
+    }
+    
+    glGenVertexArrays(1, &_VAO);
+    glGenBuffers(1, &_VBO);
+
+    glBindVertexArray(_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    
+    auto attribSize = sizeof(float) * 2;
+    
+    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(attribSize * 0));
+    glEnableVertexAttribArray(0);
+    
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(attribSize * 1));
+    glEnableVertexAttribArray(1);
+    
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT, &_templateVertexBuffer[0], GL_STATIC_DRAW);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
+    
+    _setup = true;
+}
+
+void PandaSDL::Tilebatch::BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader)
 {
     CheckDefaultShader();
     
@@ -98,9 +154,29 @@ void PandaSDL::Tilebatch::BeginBuild(unsigned int width, unsigned int height, un
     _tileHeight = tileHeight;
     AtlasTexture = atlasTexture;
     
+    _tilesheetTilesWidth = AtlasTexture->GetWidth() / _tileWidth;
+    _tilesheetTilesHeight = AtlasTexture->GetHeight() / _tileHeight;
+    
+    _inverseSpriteTextureSize = { AtlasTexture->GetTexelWidth(), AtlasTexture->GetTexelHeight() };
+    
+    _tileShader = DefaultTileShader;
+    
     _dataArray = new TileTextureData[_width * _height];
     _dataAllocated = true;
     _currentLayerEnded = false;
+    
+    for (unsigned int y = 0; y < _height; y++)
+    {
+        for (unsigned int x = 0; x < _width; x++)
+        {
+            auto index = x + _width * y;
+            _dataArray[index].X = 255;
+            _dataArray[index].Y = 255;
+        }
+    }
+    
+    if (!_setup)
+        Setup();
 }
 
 void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned char x, unsigned char y)
@@ -111,8 +187,8 @@ void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy
 
 void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned int tileIndex)
 {
-    unsigned char x = tileIndex % _width;
-    unsigned char y  = tileIndex / _width;
+    unsigned char x = tileIndex % _tilesheetTilesWidth;
+    unsigned char y = tileIndex / _tilesheetTilesWidth;
     
     SetTileAtPosition(posx, posy, x, y);
 }
@@ -178,13 +254,40 @@ void PandaSDL::Tilebatch::EndBuild(bool below)
 
 void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below)
 {
+    _tileShader->Use();
+    
+    glBindVertexArray(_VAO);
+    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    
+    _tileShader->SetVector2f("viewportSize", _scaledViewportSize);
+    _tileShader->SetVector2f("inverseSpriteTextureSize", _inverseSpriteTextureSize);
+    _tileShader->SetFloat("tileSize", _tileSize);
+    _tileShader->SetFloat("inverseTileSize", _inverseTileSize);
+    _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale), floor(position.Y * _tileScale) });
+    _tileShader->SetInteger("atlasImage", 0);
+    _tileShader->SetInteger("dataImage", 1);
+    
+    glActiveTexture(GL_TEXTURE0);
+    AtlasTexture->Bind();
+    
+    glActiveTexture(GL_TEXTURE1);
+    
     for (const auto &layer : Layers)
     {
         if (layer.IsBelow == below)
         {
-            //draw layer
+            glm::vec2 inverseTileTextureSize = { layer.DataTexture->GetTexelWidth(), layer.DataTexture->GetTexelHeight() };
+            _tileShader->SetVector2f("inverseTileTextureSize", inverseTileTextureSize);
+            
+            layer.DataTexture->Bind();
+            
+            glDrawArrays(GL_TRIANGLES, 0, 6);
         }
     }
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindVertexArray(0);
 }
 
 unsigned int PandaSDL::Tilebatch::GetWidth()

@@ -31,6 +31,8 @@ namespace PandaSDL
             void OffsetPosition(float x, float y);
             void OffsetPosition(Vector2 position);
             
+            std::string ToString();
+            
         protected:
             Rectangle _viewRect, _boundingBox;
             Vector2 _origin;

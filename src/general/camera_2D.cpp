@@ -128,3 +128,8 @@ void PandaSDL::Camera2D::UpdateViewFromPosition()
     _viewRect.X = (int)_position.X;
     _viewRect.Y = (int)_position.Y;
 }
+
+std::string PandaSDL::Camera2D::ToString()
+{
+    return _viewRect.ToString() + " - " + std::to_string(Zoom) + " - " + std::to_string(Rotation);
+}

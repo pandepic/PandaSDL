@@ -22,11 +22,14 @@ namespace PandaSDL
             unsigned int _mapWidth, _mapHeight;
             unsigned int _tileWidth, _tileHeight;
             
+            std::shared_ptr<PandaSDL::Tilebatch> _tilebatch;
             std::shared_ptr<PandaSDL::TiledMap> _tiledMap;
             std::shared_ptr<PandaSDL::Texture2D> _tilesheet;
             
             std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> _belowLayers;
             std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> _aboveLayers;
+            
+            void BuildTilebatchLayer(const std::shared_ptr<PandaSDL::TiledMapLayer> &layer, bool below);
     };
 }
 
