@@ -3,11 +3,15 @@
 
 #include "../../lib_include/pugixml/pugixml.hpp"
 
+#include "../../lib_include/glm/glm.hpp"
+#include "../../lib_include/glm/gtc/type_ptr.hpp"
+
 #include "../general/globals.h"
 #include "../graphics/texture_2D.h"
 #include "../graphics/shader.h"
 #include "../graphics/spritefont.h"
 #include "../tiled/tiled_map.h"
+#include "../graphics/framebuffer.h"
 
 namespace PandaSDL
 {
@@ -29,7 +33,7 @@ namespace PandaSDL
 
             std::string GetAssetPath(std::string asset);
 
-            std::shared_ptr<Texture2D> LoadTexture2D(std::string asset);
+            std::shared_ptr<Texture2D> LoadTexture2D(std::string asset, float scale = 1.0f);
             void UnloadTexture2D(std::string asset);
 
             std::shared_ptr<Shader> LoadShader(std::string name, std::string vertexAsset, std::string fragmentAsset, std::string geometryAsset = "");
