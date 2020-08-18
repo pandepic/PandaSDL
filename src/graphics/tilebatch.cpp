@@ -38,6 +38,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 "uniform vec2 inverseTileTextureSize;\n"
 "uniform vec2 inverseSpriteTextureSize;\n"
 "uniform vec2 tileSize;\n"
+//"uniform uint animationTimer;\n" todo : global timer or timer array?
 
 "void main()\n"
 "{\n"
@@ -46,7 +47,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 "   vec4 tile = texture(dataImage, texCoord);\n"
 "   if(tile.x == 1.0 && tile.y == 1.0) { discard; }\n"
 
-"   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n" 
+"   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n" // todo : add tile animation frame offset here
 "   vec2 spriteCoord = mod(pixelCoord, tileSize);\n"
 
 "   gl_FragColor = texture2D(atlasImage, (spriteOffset + spriteCoord) * inverseSpriteTextureSize);\n"

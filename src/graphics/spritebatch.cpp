@@ -26,7 +26,7 @@ std::string PandaSDL::Spritebatch::DefaultSpriteShaderFragmentCode =
 
 "out vec4 color;\n"
 
-"uniform sampler2D image;\n"
+"uniform sampler2D image;\n" // todo : texture array?
 
 "void main()\n"
 "{\n"
@@ -273,7 +273,8 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
 
     glm::mat4 model = glm::mat4(1.0f);
 
-    // todo : optimise this to use a mat3x2
+    // temporary slow rotation
+    // todo : optimise this to use a mat3x2 or do rotation math directly?
     if (rotation != 0.0f)
     {
         model = glm::translate(model, glm::vec3(position.X, position.Y, 1.0f));
@@ -354,7 +355,8 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.y = position.Y + (scale.y * y);
         }
 
-        // todo : optimise this to use a mat3x2
+        // temporary slow rotation
+        // todo : optimise this to use a mat3x2 or do rotation math directly?
         if (rotation != 0.0f)
         {
             auto transformVec = glm::vec4(x, y, 0, 1);
@@ -384,7 +386,7 @@ void PandaSDL::Spritebatch::End()
     _spriteShader->Use();
     _spriteShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
     
-    glActiveTexture(GL_TEXTURE0);
+    glActiveTexture(GL_TEXTURE0); // todo : handle multiple textures per draw
 
     for (const auto &batchItem : _currentBatch)
     {
