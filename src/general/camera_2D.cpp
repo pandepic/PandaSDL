@@ -54,8 +54,12 @@ void PandaSDL::Camera2D::SetPosition(Vector2 position)
 
 void PandaSDL::Camera2D::CenterPosition(Vector2 position)
 {
-    _position.X = position.X - (_viewRect.Width / 2);
-    _position.Y = position.Y - (_viewRect.Height / 2);
+    // handle camera zoom
+    auto scaledViewRect = _viewRect * Zoom;
+    auto scaledPosition = position * Zoom;
+    
+    _position.X = scaledPosition.X - (scaledViewRect.Width / 2);
+    _position.Y = scaledPosition.Y - (scaledViewRect.Height / 2);
     
     UpdateViewFromPosition();
     CheckBoundingBox();
