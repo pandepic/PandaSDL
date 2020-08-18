@@ -84,7 +84,7 @@ namespace PandaSDL
             static glm::mat4 _defaultTransform;
 
             glm::mat4 _currentBatchTransform;
-            std::vector<SpriteBatchItem> _currentBatch;
+            std::vector<SpriteBatchItem> _currentBatch; // todo : test if a C array is faster here
             float _tempVertexBuffer[PANDASDL_QUAD_VERTEX_FLOAT_COUNT];
             std::vector<SpriteBatchVertex> _batchVertices;
 

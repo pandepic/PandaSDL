@@ -19,7 +19,7 @@ namespace PandaSDL
         
         R = atlas X co-ord
         G = atlas Y co-ord
-        B = reserved for animation index
+        B = reserved for animation data
         A = free
     */
     struct TileTextureData
