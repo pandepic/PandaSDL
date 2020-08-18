@@ -18,7 +18,10 @@ namespace PandaSDL
             void Setup(std::shared_ptr<PandaSDL::TiledMap> tiledMap);
             void Draw(const PandaSDL::Camera2D &camera, bool below);
             
+            std::string GetTilesheetName();
+            
         protected:
+            std::string _tilesheetName;
             unsigned int _mapWidth, _mapHeight;
             unsigned int _tileWidth, _tileHeight;
             

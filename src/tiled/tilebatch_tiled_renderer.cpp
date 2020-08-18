@@ -22,7 +22,8 @@ void PandaSDL::TilebatchTiledRenderer::Setup(std::shared_ptr<PandaSDL::TiledMap>
     _belowLayers = _tiledMap->GetLayersByCustomProperty("Below", "true");
     _aboveLayers = _tiledMap->GetLayersByCustomProperty("Below", "false");
     
-    _tilesheet = PandaSDL::Game::AssetManager.LoadTexture2D(_tiledMap->GetCustomProperty("Tilesheet").Value);
+    _tilesheetName = _tiledMap->GetCustomProperty("Tilesheet").Value;
+    _tilesheet = PandaSDL::Game::AssetManager.LoadTexture2D(_tilesheetName);
     
     _tilebatch = std::make_shared<PandaSDL::Tilebatch>();
     
@@ -62,4 +63,9 @@ void PandaSDL::TilebatchTiledRenderer::BuildTilebatchLayer(const std::shared_ptr
     }
     
     _tilebatch->EndLayer(below);
+}
+
+std::string PandaSDL::TilebatchTiledRenderer::GetTilesheetName()
+{
+    return _tilesheetName;
 }
