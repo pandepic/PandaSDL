@@ -36,7 +36,17 @@ void PandaSDL::AnimationManager::LoadAnimations(std::string animationsFile)
 
         if (frames.find(",") == std::string::npos)
         {
-            animation->Frames.push_back(std::stoi(frames));
+            if (frames.find(">") == std::string::npos)
+            {
+                animation->Frames.push_back(std::stoi(frames));
+            }
+            else
+            {
+                auto rangeSplit = PandaSDL::SplitString(frames, ">");
+                auto start = std::stoi(rangeSplit[0]);
+                auto end = std::stoi(rangeSplit[1]);
+                animation->FrameAddRange(start, end);
+            }
         }
         else
         {
