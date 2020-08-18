@@ -14,7 +14,7 @@ void PandaSDL::Framebuffer::Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL
 {
     _target = target;
     _game = game;
-    _depthEnabled = PandaSDL::Game::GameInstance->GetDepthEnabled();
+    _depthEnabled = false;PandaSDL::Game::GameInstance->GetDepthEnabled();
 
     glGenFramebuffers(1, &_id);
     glBindFramebuffer(GL_FRAMEBUFFER, _id);

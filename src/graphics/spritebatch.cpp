@@ -62,6 +62,7 @@ PandaSDL::Spritebatch::~Spritebatch()
 {
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
+    glDeleteBuffers(1, &_IBO);
 }
 
 void PandaSDL::Spritebatch::Setup(int screenWidth, int screenHeight, bool invertY, std::shared_ptr<Shader> spriteShader, unsigned int maxBatchSize)
@@ -96,25 +97,44 @@ void PandaSDL::Spritebatch::Setup(int screenWidth, int screenHeight, bool invert
     glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Colour)));
     glEnableVertexAttribArray(2);
 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(SpriteBatchVertex) * _maxBatchSize * PANDASDL_QUAD_VERTEX_COUNT, &_batchVertices[0], GL_DYNAMIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(SpriteBatchVertex) * _maxBatchSize * PANDASDL_QUAD_VERTEX_COUNT, nullptr, GL_DYNAMIC_DRAW);
+    
+    unsigned int indicesTemplate[PANDASDL_QUAD_INDEX_COUNT] = {
+        0, 1, 2, // tri 1
+        0, 3, 1 // tri 2
+    };
+    
+    unsigned int indices[PANDASDL_QUAD_INDEX_COUNT * _maxBatchSize];
+    
+    // pre calculate index buffer
+    for (auto i = 0; i < _maxBatchSize; i++)
+    {
+        auto startIndex = i * PANDASDL_QUAD_INDEX_COUNT;
+        auto offset = i * PANDASDL_QUAD_VERTEX_COUNT;
+        
+        indices[startIndex + 0] = indicesTemplate[0] + offset;
+        indices[startIndex + 1] = indicesTemplate[1] + offset;
+        indices[startIndex + 2] = indicesTemplate[2] + offset;
+            
+        indices[startIndex + 3] = indicesTemplate[3] + offset;
+        indices[startIndex + 4] = indicesTemplate[4] + offset;
+        indices[startIndex + 5] = indicesTemplate[5] + offset;
+    }
+    
+    glCreateBuffers(1, &_IBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     float vertices[] = {
-        // triangle 1
-        0.0f, 1.0f, // bottom left
-        1.0f, 0.0f, // top right
-        0.0f, 0.0f, // top left
-
-        // triangle 2
-        0.0f, 1.0f, // bottom left
-        1.0f, 1.0f, // bottom right
-        1.0f, 0.0f, // top right
+        0.0f, 1.0f, // bottom left (0)
+        1.0f, 0.0f, // top right (1)
+        0.0f, 0.0f, // top left (2)
+        1.0f, 1.0f, // bottom right (3)
     };
-
-    // bottom left, bottom right, top right, top left
-    // 0, 2, 3, 0, 1, 2
 
     for (auto i = 0; i < PANDASDL_QUAD_VERTEX_FLOAT_COUNT; i++)
     {
@@ -253,6 +273,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
 
     glm::mat4 model = glm::mat4(1.0f);
 
+    // todo : optimise this to use a mat3x2
     if (rotation != 0.0f)
     {
         model = glm::translate(model, glm::vec3(position.X, position.Y, 1.0f));
@@ -262,7 +283,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
         model = glm::scale(model, glm::vec3(scale, 1.0f));
     }
 
-    for (auto i = 0; i < 6; i++)
+    for (auto i = 0; i < PANDASDL_QUAD_VERTEX_COUNT; i++)
     {
         glm::vec2 vertPosition;
         auto startIndex = i * 2;
@@ -287,7 +308,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.x = position.X;
             vertPosition.y = position.Y;
         }
-        else if (i == QuadVertexIndex::TOP_RIGHT || i == QuadVertexIndex::TOP_RIGHT_2)
+        else if (i == QuadVertexIndex::TOP_RIGHT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = source.X * texelWidth;
@@ -302,7 +323,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.x = position.X + (scale.x * x);
             vertPosition.y = position.Y;
         }
-        else if (i == QuadVertexIndex::BOTTOM_LEFT || i == QuadVertexIndex::BOTTOM_LEFT_2)
+        else if (i == QuadVertexIndex::BOTTOM_LEFT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = (source.X + source.Width) * texelWidth;
@@ -333,6 +354,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.y = position.Y + (scale.y * y);
         }
 
+        // todo : optimise this to use a mat3x2
         if (rotation != 0.0f)
         {
             auto transformVec = glm::vec4(x, y, 0, 1);
@@ -395,12 +417,14 @@ void PandaSDL::Spritebatch::Flush(int texture)
 
     glBindVertexArray(_VAO);
     glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
 
     glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(SpriteBatchVertex) * _batchVertices.size(), &_batchVertices[0]);
     glBindTexture(GL_TEXTURE_2D, texture);
-    glDrawArrays(GL_TRIANGLES, 0, _batchVertices.size());
+    glDrawElements(GL_TRIANGLES, (_batchVertices.size() / PANDASDL_QUAD_VERTEX_COUNT) * PANDASDL_QUAD_INDEX_COUNT, GL_UNSIGNED_INT, nullptr);
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 
     _batchVertices.clear();

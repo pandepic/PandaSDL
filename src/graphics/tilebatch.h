@@ -14,10 +14,19 @@
 
 namespace PandaSDL
 {
+    /*
+        On an empty tile X and Y will both be 255, this will discard the fragment in the shader
+        
+        R = atlas X co-ord
+        G = atlas Y co-ord
+        B = reserved for animation index
+        A = free
+    */
     struct TileTextureData
     {
         unsigned char X;
         unsigned char Y;
+        unsigned char AnimationIndex;
     };
     
     struct TilebatchLayer

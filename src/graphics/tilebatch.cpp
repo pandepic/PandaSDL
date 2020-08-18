@@ -1,8 +1,5 @@
 #include "tilebatch.h"
 
-//https://blog.tojicode.com/2012/07/sprite-tile-maps-on-gpu.html
-//http://media.tojicode.com/webgl-samples/js/webgl-tilemap.js
-
 std::shared_ptr<PandaSDL::Shader> PandaSDL::Tilebatch::DefaultTileShader = nullptr;
 bool PandaSDL::Tilebatch::DefaultShaderInitialised = false;
 
@@ -44,12 +41,14 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 
 "void main()\n"
 "{\n"
-"   if(texCoord.x < 0 || texCoord.y < 0) { discard; }\n"
-"   if(texCoord.x > 1 || texCoord.y > 1) { discard; }\n"
+"   if(texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1) { discard; }\n" // discard if outside data texture/outside tilemap
+
 "   vec4 tile = texture(dataImage, texCoord);\n"
 "   if(tile.x == 1.0 && tile.y == 1.0) { discard; }\n"
-"   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n"
+
+"   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n" 
 "   vec2 spriteCoord = mod(pixelCoord, tileSize);\n"
+
 "   gl_FragColor = texture2D(atlasImage, (spriteOffset + spriteCoord) * inverseSpriteTextureSize);\n"
 "}\n";
 
@@ -242,7 +241,7 @@ void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below, float sca
     _tileShader->SetVector2f("inverseSpriteTextureSize", _inverseSpriteTextureSize);
     _tileShader->SetVector2f("tileSize", _tileSize);
     _tileShader->SetVector2f("inverseTileSize", _inverseTileSize);
-    _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale * scale), floor(position.Y * _tileScale * scale) });
+    _tileShader->SetVector2f("viewOffset", { floor(position.X * _tileScale / scale), floor(position.Y * _tileScale / scale) });
     _tileShader->SetInteger("atlasImage", 0);
     _tileShader->SetInteger("dataImage", 1);
     

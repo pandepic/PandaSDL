@@ -12,6 +12,12 @@
 
 namespace PandaSDL
 {
+    struct TiledMapAnimation
+    {
+        unsigned int Duration; // ms
+        std::vector<unsigned int> FrameOffsets; // add to base tile index on frame
+    };
+    
     struct TiledCustomProperty
     {
         TiledCustomProperty();

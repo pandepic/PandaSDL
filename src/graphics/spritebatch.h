@@ -22,9 +22,7 @@ namespace PandaSDL
         BOTTOM_LEFT = 0,
         TOP_RIGHT,
         TOP_LEFT,
-        BOTTOM_LEFT_2,
-        BOTTOM_RIGHT,
-        TOP_RIGHT_2
+        BOTTOM_RIGHT
     };
 
     #pragma pack(push, 0)
@@ -78,7 +76,7 @@ namespace PandaSDL
         protected:
             unsigned int _maxBatchSize;
             bool _initialised, _begin;
-            GLuint _VAO, _VBO;
+            GLuint _VAO, _VBO, _IBO;
             std::shared_ptr<Shader> _spriteShader;
             glm::mat4 _projection;
             

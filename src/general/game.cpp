@@ -258,7 +258,7 @@ void PandaSDL::Game::EnableBlend(GLenum sfactor, GLenum dfactor)
     glEnable(GL_BLEND);
     glBlendFunc(sfactor, dfactor);
     
-    _depthEnabled = true;
+    _blendEnabled = true;
 }
 
 void PandaSDL::Game::EnableDepth(GLenum func)
