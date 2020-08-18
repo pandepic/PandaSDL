@@ -33,7 +33,7 @@ namespace PandaSDL
 
             std::string GetAssetPath(std::string asset);
 
-            std::shared_ptr<Texture2D> LoadTexture2D(std::string asset, float scale = 1.0f);
+            std::shared_ptr<Texture2D> LoadTexture2D(std::string asset, float scale = 1.0f, bool flip = false);
             void UnloadTexture2D(std::string asset);
 
             std::shared_ptr<Shader> LoadShader(std::string name, std::string vertexAsset, std::string fragmentAsset, std::string geometryAsset = "");

@@ -40,10 +40,10 @@ void PandaSDL::AssetManager::LoadAssets(std::string assetsFile)
     }
 }
 
-std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::string asset, float scale)
+std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::string asset, float scale, bool flip)
 {
-    // todo: figure out if we should provide flip on loading or not
-    // stbi_set_flip_vertically_on_load(true);
+    if (flip)
+        stbi_set_flip_vertically_on_load(true);
     
     auto texture = GetTexture2D(asset);
 
@@ -70,7 +70,7 @@ std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::
         PandaSDL::Spritebatch spritebatch;
         spritebatch.Setup(tempTexture->GetWidth(), tempTexture->GetHeight(), true);
         
-        glm::mat4 m(1.0f);
+        glm::mat4 m(1.0f); // identity matrix
         
         framebuffer.Start(PandaSDL::Game::GameInstance, tempTexture);
         PandaSDL::Game::GameInstance->Clear(PANDASDL_COLOR_TRANSPARENT);
@@ -86,6 +86,9 @@ std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::
     _textureCache.insert(std::pair<std::string, std::shared_ptr<Texture2D>>(asset, newTexture));
 
     //std::cout << "Loaded Texture2D " << asset << std::endl;
+    
+    if (flip)
+        stbi_set_flip_vertically_on_load(false);
 
     return newTexture;
 }
