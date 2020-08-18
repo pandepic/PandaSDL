@@ -208,7 +208,7 @@ int PandaSDL::Game::Run()
 
         if (_frameCounterTicks >= 1000)
         {
-            std::string newTitle = _windowName + " - " + std::to_string(_frameCounter) + " fps";
+            std::string newTitle = _windowName + " [PandaSDL Game Engine] - " + std::to_string(_frameCounter) + " fps";
             SDL_SetWindowTitle(_window.get(), newTitle.c_str());
             _frameCounter = 0;
             _frameCounterTicks -= 1000;
