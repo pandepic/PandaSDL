@@ -21,21 +21,21 @@ void PandaSDL::PUIWidget::LoadTemplate()
 {
 }
 
-pugi::xml_node PandaSDL::PUIWidget::GetXMLNode(std::string name)
-{
-}
+// pugi::xml_node PandaSDL::PUIWidget::GetXMLNode(std::string name)
+// {
+// }
 
-pugi::xml_node PandaSDL::PUIWidget::GetXMLNode(std::string parent, std::string child)
-{
-}
+// pugi::xml_node PandaSDL::PUIWidget::GetXMLNode(std::string parent, std::string child)
+// {
+// }
 
-pugi::xml_node PandaSDL::PUIWidget::GetXMLAttribute(std::string name)
-{
-}
+// pugi::xml_node PandaSDL::PUIWidget::GetXMLAttribute(std::string name)
+// {
+// }
 
-pugi::xml_node PandaSDL::PUIWidget::GetXMLAttribute(std::string parent, std::string child)
-{
-}
+// pugi::xml_node PandaSDL::PUIWidget::GetXMLAttribute(std::string parent, std::string child)
+// {
+// }
 
 void PandaSDL::PUIWidget::AnchorTop()
 {
