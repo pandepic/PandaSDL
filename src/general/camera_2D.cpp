@@ -34,6 +34,12 @@ PandaSDL::Rectangle PandaSDL::Camera2D::GetBoundingBox() const
     return _boundingBox;
 }
 
+void PandaSDL::Camera2D::SetBoundingBox(Rectangle rect)
+{
+    _boundingBox = rect;
+    CheckBoundingBox();
+}
+
 PandaSDL::Rectangle PandaSDL::Camera2D::GetViewRect() const
 {
     return _viewRect;

@@ -22,6 +22,7 @@ namespace PandaSDL
 
             glm::mat4 GetViewMatrix() const;
             Rectangle GetBoundingBox() const;
+            void SetBoundingBox(Rectangle rect);
             Rectangle GetViewRect() const;
             Vector2 GetPosition() const;
             void SetPosition(Vector2 position);
