@@ -15,7 +15,7 @@
 #include "../assets/dynamic_texture_manager.h"
 #include "../assets/asset_manager.h"
 #include "../sprites/animation_manager.h"
-#include "../graphics/spritebatch.h"
+#include "../graphics/sprite_batch.h"
 #include "../input/input_manager.h"
 #include "gamestate.h"
 #include "settings_manager.h"

@@ -6,7 +6,6 @@
 
 #include "texture_2D.h"
 #include "../general/game.h"
-#include "spritebatch.h"
 #include "shader.h"
 
 namespace PandaSDL
@@ -14,11 +13,11 @@ namespace PandaSDL
     // forward declarations
     class Game;
     
-    class Framebuffer
+    class FrameBuffer
     {
         public:
-            Framebuffer();
-            ~Framebuffer();
+            FrameBuffer();
+            ~FrameBuffer();
 
             void Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL::Texture2D> target);
             void End();

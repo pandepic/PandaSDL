@@ -13,7 +13,7 @@
 #include "../math/vector2.h"
 #include "shader.h"
 #include "color.h"
-#include "spritefont.h"
+#include "sprite_font.h"
 
 namespace PandaSDL
 {
@@ -48,20 +48,20 @@ namespace PandaSDL
     };
     
     // forward declarations
-    class Spritefont;
+    class SpriteFont;
 
-    class Spritebatch
+    class SpriteBatch
     {
         public:
-            Spritebatch();
-            ~Spritebatch();
+            SpriteBatch();
+            ~SpriteBatch();
 
             void Setup(int screenWidth, int screenHeight, bool invertY = false, std::shared_ptr<Shader> spriteShader = DefaultSpriteShader, unsigned int maxBatchSize = PANDASDL_DEFAULT_BATCH_SIZE);
 
             void Begin(glm::mat4 transform = _defaultTransform);
             void Draw(std::shared_ptr<Texture2D> texture, Vector2 position, Color color = PANDASDL_COLOR_WHITE, Vector2 scale = Vector2(1.0f, 1.0f), float rotation = 0.0f, eSpriteFlip flip = eSpriteFlip::NONE);
             void Draw(std::shared_ptr<Texture2D> texture, Rectangle sourceRect, Vector2 position, Color color = PANDASDL_COLOR_WHITE, Vector2 scale = Vector2(1.0f, 1.0f), float rotation = 0.0f, eSpriteFlip flip = eSpriteFlip::NONE);
-            void DrawText(std::shared_ptr<Spritefont> font, std::string text, unsigned int size, Vector2 position, Color color = PANDASDL_COLOR_WHITE, bool alignPosition = false, Vector2 scale = Vector2(1.0f, 1.0f), float rotation = 0.0f, eSpriteFlip flip = eSpriteFlip::NONE);
+            void DrawText(std::shared_ptr<SpriteFont> font, std::string text, unsigned int size, Vector2 position, Color color = PANDASDL_COLOR_WHITE, bool alignPosition = false, Vector2 scale = Vector2(1.0f, 1.0f), float rotation = 0.0f, eSpriteFlip flip = eSpriteFlip::NONE);
             void End();
             void Clear();
 

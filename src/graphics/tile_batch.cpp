@@ -1,9 +1,9 @@
-#include "tilebatch.h"
+#include "tile_batch.h"
 
-std::shared_ptr<PandaSDL::Shader> PandaSDL::Tilebatch::DefaultTileShader = nullptr;
-bool PandaSDL::Tilebatch::DefaultShaderInitialised = false;
+std::shared_ptr<PandaSDL::Shader> PandaSDL::TileBatch::DefaultTileShader = nullptr;
+bool PandaSDL::TileBatch::DefaultShaderInitialised = false;
 
-std::string PandaSDL::Tilebatch::DefaultTileShaderVertexCode =
+std::string PandaSDL::TileBatch::DefaultTileShaderVertexCode =
 "#version 330 core\n"
 "precision mediump float;\n"
 
@@ -25,7 +25,7 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderVertexCode =
 "   gl_Position = vec4(position, -1.0, 1.0);\n"
 "}\n";
 
-std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
+std::string PandaSDL::TileBatch::DefaultTileShaderFragmentCode =
 "#version 330 core\n"
 "precision mediump float;\n"
 
@@ -53,18 +53,18 @@ std::string PandaSDL::Tilebatch::DefaultTileShaderFragmentCode =
 "   gl_FragColor = texture2D(atlasImage, (spriteOffset + spriteCoord) * inverseSpriteTextureSize);\n"
 "}\n";
 
-PandaSDL::Tilebatch::Tilebatch()
+PandaSDL::TileBatch::TileBatch()
     : _dataAllocated(false), _dataArray(nullptr), _width(0), _height(0), _currentLayerEnded(true), _setup(false), _tileScale(1.0f),
     _tileSize(0, 0), _inverseTileSize(0, 0)
 {
 }
 
-PandaSDL::Tilebatch::~Tilebatch()
+PandaSDL::TileBatch::~TileBatch()
 {
     ClearData();
 }
 
-void PandaSDL::Tilebatch::ClearData()
+void PandaSDL::TileBatch::ClearData()
 {
     if (_dataAllocated)
     {
@@ -74,7 +74,7 @@ void PandaSDL::Tilebatch::ClearData()
     }
 }
 
-void PandaSDL::Tilebatch::Setup()
+void PandaSDL::TileBatch::Setup()
 {
     if (_setup)
         return;
@@ -121,7 +121,7 @@ void PandaSDL::Tilebatch::Setup()
     _setup = true;
 }
 
-void PandaSDL::Tilebatch::BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader)
+void PandaSDL::TileBatch::BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader)
 {
     CheckDefaultShader();
     
@@ -156,13 +156,13 @@ void PandaSDL::Tilebatch::BeginBuild(unsigned int width, unsigned int height, un
         Setup();
 }
 
-void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned char x, unsigned char y)
+void PandaSDL::TileBatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned char x, unsigned char y)
 {
     auto index = posx + _width * posy;
     SetTileAtIndex(index, x, y);
 }
 
-void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned int tileIndex)
+void PandaSDL::TileBatch::SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned int tileIndex)
 {
     unsigned char x = tileIndex % _tilesheetTilesWidth;
     unsigned char y = tileIndex / _tilesheetTilesWidth;
@@ -170,7 +170,7 @@ void PandaSDL::Tilebatch::SetTileAtPosition(unsigned int posx, unsigned int posy
     SetTileAtPosition(posx, posy, x, y);
 }
 
-void PandaSDL::Tilebatch::SetTileAtIndex(unsigned int index, unsigned char x, unsigned char y)
+void PandaSDL::TileBatch::SetTileAtIndex(unsigned int index, unsigned char x, unsigned char y)
 {
     _dataArray[index].X = x;
     _dataArray[index].Y = y;
@@ -178,7 +178,7 @@ void PandaSDL::Tilebatch::SetTileAtIndex(unsigned int index, unsigned char x, un
     _currentLayerEnded = false;
 }
 
-void PandaSDL::Tilebatch::SetTileAtIndex(unsigned int index, unsigned int tileIndex)
+void PandaSDL::TileBatch::SetTileAtIndex(unsigned int index, unsigned int tileIndex)
 {
     unsigned char x = tileIndex % _width;
     unsigned char y  = tileIndex / _width;
@@ -186,12 +186,12 @@ void PandaSDL::Tilebatch::SetTileAtIndex(unsigned int index, unsigned int tileIn
     SetTileAtIndex(index, x, y);
 }
 
-void PandaSDL::Tilebatch::EndLayer(bool below)
+void PandaSDL::TileBatch::EndLayer(bool below)
 {
     if (!_dataAllocated)
         return; // todo : throw exception?
     
-    PandaSDL::TilebatchLayer newLayer;
+    PandaSDL::TileBatchLayer newLayer;
     newLayer.IsBelow = below;
     
     unsigned char* textureBuffer = new unsigned char[(_width * 2) * _height];
@@ -221,7 +221,7 @@ void PandaSDL::Tilebatch::EndLayer(bool below)
     _currentLayerEnded = true;
 }
 
-void PandaSDL::Tilebatch::EndBuild(bool below)
+void PandaSDL::TileBatch::EndBuild(bool below)
 {
     if (!_currentLayerEnded)
         EndLayer(below);
@@ -229,7 +229,7 @@ void PandaSDL::Tilebatch::EndBuild(bool below)
     ClearData();
 }
 
-void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below, float scale)
+void PandaSDL::TileBatch::Draw(PandaSDL::Vector2 position, bool below, float scale)
 {
     _tileShader->Use();
     
@@ -269,21 +269,21 @@ void PandaSDL::Tilebatch::Draw(PandaSDL::Vector2 position, bool below, float sca
     glBindVertexArray(0);
 }
 
-unsigned int PandaSDL::Tilebatch::GetWidth()
+unsigned int PandaSDL::TileBatch::GetWidth()
 {
     return _width;
 }
 
-unsigned int PandaSDL::Tilebatch::GetHeight()
+unsigned int PandaSDL::TileBatch::GetHeight()
 {
     return _height;
 }
 
-void PandaSDL::Tilebatch::CheckDefaultShader()
+void PandaSDL::TileBatch::CheckDefaultShader()
 {
-    if (PandaSDL::Tilebatch::DefaultShaderInitialised)
+    if (PandaSDL::TileBatch::DefaultShaderInitialised)
         return;
     
-    PandaSDL::Tilebatch::DefaultTileShader = PandaSDL::Game::AssetManager.LoadShaderFromString("DefaultTileShader", PandaSDL::Tilebatch::DefaultTileShaderVertexCode, PandaSDL::Tilebatch::DefaultTileShaderFragmentCode);
-    PandaSDL::Tilebatch::DefaultShaderInitialised = true;
+    PandaSDL::TileBatch::DefaultTileShader = PandaSDL::Game::AssetManager.LoadShaderFromString("DefaultTileShader", PandaSDL::TileBatch::DefaultTileShaderVertexCode, PandaSDL::TileBatch::DefaultTileShaderFragmentCode);
+    PandaSDL::TileBatch::DefaultShaderInitialised = true;
 }

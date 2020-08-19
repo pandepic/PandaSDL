@@ -36,7 +36,7 @@ void PandaSDL::Sprite::LoadTexture(std::shared_ptr<PandaSDL::Texture2D> texture)
     SourceRect = PandaSDL::Rectangle(0, 0, Texture->GetWidth(), Texture->GetHeight());
 }
 
-void PandaSDL::Sprite::Draw(std::shared_ptr<PandaSDL::Spritebatch> spriteBatch, PandaSDL::Vector2 position)
+void PandaSDL::Sprite::Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, PandaSDL::Vector2 position)
 {
     if (Texture == nullptr)
         return;

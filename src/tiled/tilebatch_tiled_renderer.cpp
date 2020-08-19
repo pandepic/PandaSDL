@@ -25,7 +25,7 @@ void PandaSDL::TilebatchTiledRenderer::Setup(std::shared_ptr<PandaSDL::TiledMap>
     _tilesheetName = _tiledMap->GetCustomProperty("Tilesheet").Value;
     _tilesheet = PandaSDL::Game::AssetManager.LoadTexture2D(_tilesheetName);
     
-    _tilebatch = std::make_shared<PandaSDL::Tilebatch>();
+    _tilebatch = std::make_shared<PandaSDL::TileBatch>();
     
     _tilebatch->BeginBuild(_mapWidth, _mapHeight, _tileWidth, _tileHeight, _tilesheet);
     

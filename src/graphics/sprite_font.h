@@ -8,14 +8,15 @@
 #include "texture_2D.h"
 #include "../math/rectangle.h"
 #include "../math/vector2.h"
-#include "framebuffer.h"
+#include "frame_buffer.h"
+#include "sprite_batch.h"
 
 #define PANDASDL_FONT_TEXTURE_MAXWIDTH 2000
 #define PANDASDL_FONT_TEXTURE_MAXHEIGHT 1000
 
 namespace PandaSDL
 {
-    struct SpritefontCharacterData
+    struct SpriteFontCharacterData
     {
         bool Whitespace;
         
@@ -28,11 +29,11 @@ namespace PandaSDL
         std::shared_ptr<Texture2D> Texture;
     };
 
-    struct SpritefontSizeData
+    struct SpriteFontSizeData
     {
-        SpritefontSizeData() {}
+        SpriteFontSizeData() {}
         
-        ~SpritefontSizeData()
+        ~SpriteFontSizeData()
         {
             FT_Done_Face(FontFace);
         }
@@ -40,27 +41,27 @@ namespace PandaSDL
         unsigned int Size;
         PandaSDL::Vector2 NextCharPosition;
         std::shared_ptr<Texture2D> Texture;
-        std::map<unsigned char, std::shared_ptr<SpritefontCharacterData>> CharacterCache;
+        std::map<unsigned char, std::shared_ptr<SpriteFontCharacterData>> CharacterCache;
         
         FT_Face FontFace;
     };
 
-    class Spritefont
+    class SpriteFont
     {
         public:
-            Spritefont();
-            ~Spritefont();
+            SpriteFont();
+            ~SpriteFont();
 
             void Create(std::string filepath);
             PandaSDL::Vector2 MeasureText(std::string text, unsigned int size);
 
-            std::shared_ptr<PandaSDL::SpritefontCharacterData> GetCharacterData(unsigned char character, unsigned int size);
+            std::shared_ptr<PandaSDL::SpriteFontCharacterData> GetCharacterData(unsigned char character, unsigned int size);
 
             void Clear();
 
         protected:
             std::string _filepath;
-            std::map<unsigned int, std::shared_ptr<SpritefontSizeData>> _sizeCache;
+            std::map<unsigned int, std::shared_ptr<SpriteFontSizeData>> _sizeCache;
             std::vector<unsigned int> _textureIDs;
 
             static void InitFT();

@@ -8,7 +8,7 @@ PandaSDL::SpritebatchTiledRenderer::~SpritebatchTiledRenderer()
 {
 }
 
-void PandaSDL::SpritebatchTiledRenderer::Setup(std::shared_ptr<PandaSDL::TiledMap> tiledMap, std::shared_ptr<PandaSDL::Spritebatch> spriteBatch)
+void PandaSDL::SpritebatchTiledRenderer::Setup(std::shared_ptr<PandaSDL::TiledMap> tiledMap, std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch)
 {
     _mapWidth = tiledMap->GetMapWidth();
     _mapHeight = tiledMap->GetMapHeight();

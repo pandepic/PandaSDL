@@ -1,7 +1,7 @@
-#include "spritebatch.h"
+#include "sprite_batch.h"
 
-std::shared_ptr<PandaSDL::Shader> PandaSDL::Spritebatch::DefaultSpriteShader = nullptr;
-std::string PandaSDL::Spritebatch::DefaultSpriteShaderVertexCode =
+std::shared_ptr<PandaSDL::Shader> PandaSDL::SpriteBatch::DefaultSpriteShader = nullptr;
+std::string PandaSDL::SpriteBatch::DefaultSpriteShaderVertexCode =
 "#version 330 core\n"
 "layout (location = 0) in vec2 vPosition;\n"
 "layout (location = 1) in vec2 vTexCoords;\n"
@@ -19,7 +19,7 @@ std::string PandaSDL::Spritebatch::DefaultSpriteShaderVertexCode =
 "    gl_Position = mProjectionView * vec4(vPosition.x, vPosition.y, 0.0, 1.0);\n"
 "}\n";
 
-std::string PandaSDL::Spritebatch::DefaultSpriteShaderFragmentCode =
+std::string PandaSDL::SpriteBatch::DefaultSpriteShaderFragmentCode =
 "#version 330 core\n"
 "in vec2 fTexCoords;\n"
 "in vec4 fColour;\n"
@@ -33,10 +33,10 @@ std::string PandaSDL::Spritebatch::DefaultSpriteShaderFragmentCode =
 "    color = texture(image, fTexCoords) * fColour;\n"
 "}\n";
 
-std::shared_ptr<PandaSDL::Shader> PandaSDL::Spritebatch::DefaultFontShader = nullptr;
-std::string PandaSDL::Spritebatch::DefaultFontShaderVertexCode = PandaSDL::Spritebatch::DefaultSpriteShaderVertexCode;
+std::shared_ptr<PandaSDL::Shader> PandaSDL::SpriteBatch::DefaultFontShader = nullptr;
+std::string PandaSDL::SpriteBatch::DefaultFontShaderVertexCode = PandaSDL::SpriteBatch::DefaultSpriteShaderVertexCode;
 
-std::string PandaSDL::Spritebatch::DefaultFontShaderFragmentCode =
+std::string PandaSDL::SpriteBatch::DefaultFontShaderFragmentCode =
 "#version 330 core\n"
 "in vec2 fTexCoords;\n"
 "in vec4 fColour;\n"
@@ -51,21 +51,21 @@ std::string PandaSDL::Spritebatch::DefaultFontShaderFragmentCode =
 "    color = fColour * sampled;\n"
 "}\n";
 
-glm::mat4 PandaSDL::Spritebatch::_defaultTransform = glm::mat4(1.0f);
+glm::mat4 PandaSDL::SpriteBatch::_defaultTransform = glm::mat4(1.0f);
 
-PandaSDL::Spritebatch::Spritebatch()
+PandaSDL::SpriteBatch::SpriteBatch()
 : _begin(false), _initialised(false)
 {
 }
 
-PandaSDL::Spritebatch::~Spritebatch()
+PandaSDL::SpriteBatch::~SpriteBatch()
 {
     glDeleteVertexArrays(1, &_VAO);
     glDeleteBuffers(1, &_VBO);
     glDeleteBuffers(1, &_IBO);
 }
 
-void PandaSDL::Spritebatch::Setup(int screenWidth, int screenHeight, bool invertY, std::shared_ptr<Shader> spriteShader, unsigned int maxBatchSize)
+void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invertY, std::shared_ptr<Shader> spriteShader, unsigned int maxBatchSize)
 {
     if (_initialised)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_SETUP, "Setup can only be called once per Spritebatch.");
@@ -144,7 +144,7 @@ void PandaSDL::Spritebatch::Setup(int screenWidth, int screenHeight, bool invert
     _initialised = true;
 }
 
-void PandaSDL::Spritebatch::Begin(glm::mat4 transform)
+void PandaSDL::SpriteBatch::Begin(glm::mat4 transform)
 {
     if (!_initialised)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Must call Setup before drawing.");
@@ -155,12 +155,12 @@ void PandaSDL::Spritebatch::Begin(glm::mat4 transform)
     _begin = true;
 }
 
-void PandaSDL::Spritebatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
 {
     Draw(texture, PandaSDL::Rectangle::Empty(), position, color, scale, rotation, flip);
 }
 
-void PandaSDL::Spritebatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Rectangle sourceRect, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Rectangle sourceRect, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
 {
     if (!_begin)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before Draw.");
@@ -195,7 +195,7 @@ void PandaSDL::Spritebatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, P
     _currentBatch.push_back(batchItem);
 }
 
-void PandaSDL::Spritebatch::DrawText(std::shared_ptr<Spritefont> font, std::string text, unsigned int size, Vector2 position, Color color, bool alignPosition, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::DrawText(std::shared_ptr<SpriteFont> font, std::string text, unsigned int size, Vector2 position, Color color, bool alignPosition, Vector2 scale, float rotation, eSpriteFlip flip)
 {
     if (!_begin)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before DrawText.");
@@ -256,7 +256,7 @@ void PandaSDL::Spritebatch::DrawText(std::shared_ptr<Spritefont> font, std::stri
     }
 }
 
-void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
+void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
 {
     auto texture = item.Texture;
     auto source = item.SourceRect;
@@ -374,7 +374,7 @@ void PandaSDL::Spritebatch::AddQuadVertices(const SpriteBatchItem &item)
     }
 }
 
-void PandaSDL::Spritebatch::End()
+void PandaSDL::SpriteBatch::End()
 {
     if (!_begin)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before End.");
@@ -412,7 +412,7 @@ void PandaSDL::Spritebatch::End()
     Clear();
 }
 
-void PandaSDL::Spritebatch::Flush(int texture)
+void PandaSDL::SpriteBatch::Flush(int texture)
 {
     if (_batchVertices.size() <= 0)
         return;
@@ -432,7 +432,7 @@ void PandaSDL::Spritebatch::Flush(int texture)
     _batchVertices.clear();
 }
 
-void PandaSDL::Spritebatch::Clear()
+void PandaSDL::SpriteBatch::Clear()
 {
     _currentBatch.clear();
     _batchVertices.clear();

@@ -19,7 +19,7 @@ namespace PandaSDL
             void StopAnimation();
             void SetFrame(int frame);
 
-            virtual void Draw(std::shared_ptr<PandaSDL::Spritebatch> spriteBatch, PandaSDL::Vector2 position) override;
+            virtual void Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, PandaSDL::Vector2 position) override;
             virtual void Update(const PandaSDL::Timer& gameTimer) override;
 
             int FrameWidth;

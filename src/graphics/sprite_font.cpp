@@ -1,54 +1,54 @@
-#include "spritefont.h"
+#include "sprite_font.h"
 
-FT_Library PandaSDL::Spritefont::_ftLibrary = FT_Library();
-bool PandaSDL::Spritefont::_ftInit = false;
+FT_Library PandaSDL::SpriteFont::_ftLibrary = FT_Library();
+bool PandaSDL::SpriteFont::_ftInit = false;
 
-PandaSDL::Spritefont::Spritefont()
+PandaSDL::SpriteFont::SpriteFont()
 {
 }
 
-PandaSDL::Spritefont::~Spritefont()
+PandaSDL::SpriteFont::~SpriteFont()
 {
     Clear();
 }
 
-void PandaSDL::Spritefont::Clear()
+void PandaSDL::SpriteFont::Clear()
 {
 }
 
-void PandaSDL::Spritefont::Create(std::string filepath)
+void PandaSDL::SpriteFont::Create(std::string filepath)
 {
-    PandaSDL::Spritefont::InitFT();
+    PandaSDL::SpriteFont::InitFT();
     
     _filepath = filepath;
 }
 
-void PandaSDL::Spritefont::InitFT()
+void PandaSDL::SpriteFont::InitFT()
 {
-    if (PandaSDL::Spritefont::_ftInit)
+    if (PandaSDL::SpriteFont::_ftInit)
         return;
     
-    if (FT_Init_FreeType(&PandaSDL::Spritefont::_ftLibrary))
+    if (FT_Init_FreeType(&PandaSDL::SpriteFont::_ftLibrary))
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::FREETYPE_INIT_FAILED);
     
-    PandaSDL::Spritefont::_ftInit = true;
+    PandaSDL::SpriteFont::_ftInit = true;
 }
 
-std::shared_ptr<PandaSDL::SpritefontCharacterData> PandaSDL::Spritefont::GetCharacterData(unsigned char character, unsigned int size)
+std::shared_ptr<PandaSDL::SpriteFontCharacterData> PandaSDL::SpriteFont::GetCharacterData(unsigned char character, unsigned int size)
 {
     if (_sizeCache.count(size) == 0)
     {
-        auto newSize = std::make_shared<PandaSDL::SpritefontSizeData>();
+        auto newSize = std::make_shared<PandaSDL::SpriteFontSizeData>();
         newSize->Size = size;
         newSize->NextCharPosition = PandaSDL::Vector2::Zero();
         newSize->Texture = PandaSDL::Game::DynamicTextureManager.CreateTexture2D(PANDASDL_FONT_TEXTURE_MAXWIDTH, PANDASDL_FONT_TEXTURE_MAXHEIGHT);
         
-        if (FT_New_Face(PandaSDL::Spritefont::_ftLibrary, _filepath.c_str(), 0, &newSize->FontFace))
+        if (FT_New_Face(PandaSDL::SpriteFont::_ftLibrary, _filepath.c_str(), 0, &newSize->FontFace))
             PandaSDL::ThrowException(PandaSDL::ePandaSDLException::FREETYPE_LOADFONT_FAILED);
         
         FT_Set_Pixel_Sizes(newSize->FontFace, 0, size);
         
-        _sizeCache.insert(std::pair<unsigned int, std::shared_ptr<PandaSDL::SpritefontSizeData>>(size, newSize));
+        _sizeCache.insert(std::pair<unsigned int, std::shared_ptr<PandaSDL::SpriteFontSizeData>>(size, newSize));
     }
     
     auto sizeData = _sizeCache[size];
@@ -75,10 +75,10 @@ std::shared_ptr<PandaSDL::SpritefontCharacterData> PandaSDL::Spritefont::GetChar
         
         if (tempTexture->GetWidth() != 0 && tempTexture->GetHeight() != 0)
         {
-            PandaSDL::Spritebatch spriteBatch;
-            spriteBatch.Setup(sizeData->Texture->GetWidth(), sizeData->Texture->GetHeight(), true, PandaSDL::Spritebatch::DefaultFontShader);
+            PandaSDL::SpriteBatch spriteBatch;
+            spriteBatch.Setup(sizeData->Texture->GetWidth(), sizeData->Texture->GetHeight(), true, PandaSDL::SpriteBatch::DefaultFontShader);
             
-            PandaSDL::Framebuffer frameBuffer;
+            PandaSDL::FrameBuffer frameBuffer;
             
             frameBuffer.Start(PandaSDL::Game::GameInstance, sizeData->Texture);
             if (sizeData->NextCharPosition.IsZero())
@@ -94,7 +94,7 @@ std::shared_ptr<PandaSDL::SpritefontCharacterData> PandaSDL::Spritefont::GetChar
             whitespace = false;
         }
         
-        auto newCharacter = std::make_shared<SpritefontCharacterData>();
+        auto newCharacter = std::make_shared<SpriteFontCharacterData>();
         newCharacter->Character = character;
         newCharacter->Size = PandaSDL::Vector2(sizeData->FontFace->glyph->bitmap.width, sizeData->FontFace->glyph->bitmap.rows);
         newCharacter->Bearing = PandaSDL::Vector2(sizeData->FontFace->glyph->bitmap_left, sizeData->FontFace->glyph->bitmap_top);
@@ -103,7 +103,7 @@ std::shared_ptr<PandaSDL::SpritefontCharacterData> PandaSDL::Spritefont::GetChar
         newCharacter->SourceRect = PandaSDL::Rectangle(sizeData->NextCharPosition.X, sizeData->NextCharPosition.Y, tempTexture->GetWidth(), tempTexture->GetHeight());
         newCharacter->Whitespace = whitespace;
         
-        sizeData->CharacterCache.insert(std::pair<unsigned char, std::shared_ptr<PandaSDL::SpritefontCharacterData>>(character, newCharacter));
+        sizeData->CharacterCache.insert(std::pair<unsigned char, std::shared_ptr<PandaSDL::SpriteFontCharacterData>>(character, newCharacter));
         
         sizeData->NextCharPosition.X += tempTexture->GetWidth();
     }
@@ -111,7 +111,7 @@ std::shared_ptr<PandaSDL::SpritefontCharacterData> PandaSDL::Spritefont::GetChar
     return sizeData->CharacterCache[character];
 }
 
-PandaSDL::Vector2 PandaSDL::Spritefont::MeasureText(std::string text, unsigned int size)
+PandaSDL::Vector2 PandaSDL::SpriteFont::MeasureText(std::string text, unsigned int size)
 {
     auto stringSize = PandaSDL::Vector2::Zero();
     

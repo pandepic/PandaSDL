@@ -25,10 +25,10 @@ void PandaSDL::LayeredSprite::Create(std::vector<std::string> layerAssets, int f
 
     auto newTexture = PandaSDL::Game::DynamicTextureManager.CreateTexture2D(layerTextures[0]->GetWidth(), layerTextures[0]->GetHeight());
 
-    PandaSDL::Spritebatch spriteBatch;
+    PandaSDL::SpriteBatch spriteBatch;
     spriteBatch.Setup(layerTextures[0]->GetWidth(), layerTextures[0]->GetHeight(), true);
 
-    PandaSDL::Framebuffer frameBuffer;
+    PandaSDL::FrameBuffer frameBuffer;
 
     frameBuffer.Start(PandaSDL::Game::GameInstance, newTexture);
     PandaSDL::Game::GameInstance->Clear(PANDASDL_COLOR_TRANSPARENT);

@@ -9,14 +9,14 @@
 #include "../general/globals.h"
 #include "../graphics/texture_2D.h"
 #include "../graphics/shader.h"
-#include "../graphics/spritefont.h"
+#include "../graphics/sprite_font.h"
 #include "../tiled/tiled_map.h"
-#include "../graphics/framebuffer.h"
+#include "../graphics/frame_buffer.h"
 
 namespace PandaSDL
 {
     // forward declarations
-    class Spritefont;
+    class SpriteFont;
     
     struct Asset
     {
@@ -40,7 +40,7 @@ namespace PandaSDL
             std::shared_ptr<Shader> LoadShaderFromString(std::string name, std::string vertexCode, std::string fragmentCode, std::string geometryCode = "");
             void UnloadShader(std::string name);
 
-            std::shared_ptr<Spritefont> LoadSpritefont(std::string asset);
+            std::shared_ptr<SpriteFont> LoadSpritefont(std::string asset);
             void UnloadSpritefont(std::string asset);
 
             std::shared_ptr<TiledMap> LoadTiledMap(std::string asset);
@@ -48,7 +48,7 @@ namespace PandaSDL
 
             std::shared_ptr<Texture2D> GetTexture2D(std::string asset);
             std::shared_ptr<Shader> GetShader(std::string asset);
-            std::shared_ptr<Spritefont> GetSpritefont(std::string asset);
+            std::shared_ptr<SpriteFont> GetSpritefont(std::string asset);
             std::shared_ptr<TiledMap> GetTiledMap(std::string asset);
 
             void Clear();
@@ -57,7 +57,7 @@ namespace PandaSDL
             std::map<std::string, Asset> _assets;
             std::map<std::string, std::shared_ptr<Texture2D>> _textureCache;
             std::map<std::string, std::shared_ptr<Shader>> _shaderCache;
-            std::map<std::string, std::shared_ptr<Spritefont>> _fontCache;
+            std::map<std::string, std::shared_ptr<SpriteFont>> _fontCache;
             std::map<std::string, std::shared_ptr<TiledMap>> _tiledCache;
     };
 }

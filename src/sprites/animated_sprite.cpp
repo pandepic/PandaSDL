@@ -71,7 +71,7 @@ void PandaSDL::AnimatedSprite::SetFrame(int frame)
     CurrentFrame = frame;
 }
 
-void PandaSDL::AnimatedSprite::Draw(std::shared_ptr<PandaSDL::Spritebatch> spriteBatch, PandaSDL::Vector2 position)
+void PandaSDL::AnimatedSprite::Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, PandaSDL::Vector2 position)
 {
     PandaSDL::Sprite::Draw(spriteBatch, position);
 }

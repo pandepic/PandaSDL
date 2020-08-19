@@ -27,6 +27,7 @@ namespace PandaSDL
             Vector2 GetPosition() const;
             void SetPosition(Vector2 position);
             void CenterPosition(Vector2 position);
+            void CenterPosition(Rectangle rect);
             void OffsetPosition(int x, int y);
             void OffsetPosition(double x, double y);
             void OffsetPosition(float x, float y);

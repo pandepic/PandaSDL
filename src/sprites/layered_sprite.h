@@ -2,8 +2,8 @@
 #define __pandasdl_layeredsprite_h__
 
 #include "../general/game.h"
-#include "../graphics/framebuffer.h"
-#include "../graphics/spritebatch.h"
+#include "../graphics/frame_buffer.h"
+#include "../graphics/sprite_batch.h"
 #include "animated_sprite.h"
 
 namespace PandaSDL

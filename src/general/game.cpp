@@ -41,8 +41,8 @@ void PandaSDL::Game::SetNextGamestate(PandaSDL::Gamestate* NewState)
 
 void PandaSDL::Game::LoadDefaultShaders(std::string spriteAssetName, std::string fontAssetName)
 {
-    PandaSDL::Spritebatch::DefaultSpriteShader = PandaSDL::Game::AssetManager.LoadShaderFromString(spriteAssetName, PandaSDL::Spritebatch::DefaultSpriteShaderVertexCode, PandaSDL::Spritebatch::DefaultSpriteShaderFragmentCode);
-    PandaSDL::Spritebatch::DefaultFontShader = PandaSDL::Game::AssetManager.LoadShaderFromString(fontAssetName, PandaSDL::Spritebatch::DefaultFontShaderVertexCode, PandaSDL::Spritebatch::DefaultFontShaderFragmentCode);
+    PandaSDL::SpriteBatch::DefaultSpriteShader = PandaSDL::Game::AssetManager.LoadShaderFromString(spriteAssetName, PandaSDL::SpriteBatch::DefaultSpriteShaderVertexCode, PandaSDL::SpriteBatch::DefaultSpriteShaderFragmentCode);
+    PandaSDL::SpriteBatch::DefaultFontShader = PandaSDL::Game::AssetManager.LoadShaderFromString(fontAssetName, PandaSDL::SpriteBatch::DefaultFontShaderVertexCode, PandaSDL::SpriteBatch::DefaultFontShaderFragmentCode);
 }
 
 void PandaSDL::Game::Quit()

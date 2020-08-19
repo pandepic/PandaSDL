@@ -29,19 +29,19 @@ namespace PandaSDL
         unsigned char AnimationIndex;
     };
     
-    struct TilebatchLayer
+    struct TileBatchLayer
     {
         bool IsBelow;
         std::shared_ptr<PandaSDL::Texture2D> DataTexture;
     };
     
-    class Tilebatch
+    class TileBatch
     {
         public:
-            Tilebatch();
-            ~Tilebatch();
+            TileBatch();
+            ~TileBatch();
             
-            std::vector<PandaSDL::TilebatchLayer> Layers;
+            std::vector<PandaSDL::TileBatchLayer> Layers;
             std::shared_ptr<PandaSDL::Texture2D> AtlasTexture;
             
             void BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader = DefaultTileShader);

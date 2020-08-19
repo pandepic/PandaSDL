@@ -3,7 +3,7 @@
 
 #include "../general/game.h"
 #include "../general/camera_2D.h"
-#include "../graphics/tilebatch.h"
+#include "../graphics/tile_batch.h"
 #include "../graphics/texture_2D.h"
 #include "tiled_map.h"
 
@@ -25,7 +25,7 @@ namespace PandaSDL
             unsigned int _mapWidth, _mapHeight;
             unsigned int _tileWidth, _tileHeight;
             
-            std::shared_ptr<PandaSDL::Tilebatch> _tilebatch;
+            std::shared_ptr<PandaSDL::TileBatch> _tilebatch;
             std::shared_ptr<PandaSDL::TiledMap> _tiledMap;
             std::shared_ptr<PandaSDL::Texture2D> _tilesheet;
             

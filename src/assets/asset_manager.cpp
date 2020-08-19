@@ -66,18 +66,18 @@ std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::
         auto tempTexture = std::make_shared<PandaSDL::Texture2D>();
         tempTexture->Create(width * scale, height * scale);
         
-        PandaSDL::Framebuffer framebuffer;
-        PandaSDL::Spritebatch spritebatch;
-        spritebatch.Setup(tempTexture->GetWidth(), tempTexture->GetHeight(), true);
+        PandaSDL::FrameBuffer frameBuffer;
+        PandaSDL::SpriteBatch spriteBatch;
+        spriteBatch.Setup(tempTexture->GetWidth(), tempTexture->GetHeight(), true);
         
         glm::mat4 m(1.0f); // identity matrix
         
-        framebuffer.Start(PandaSDL::Game::GameInstance, tempTexture);
+        frameBuffer.Start(PandaSDL::Game::GameInstance, tempTexture);
         PandaSDL::Game::GameInstance->Clear(PANDASDL_COLOR_TRANSPARENT);
-        spritebatch.Begin(glm::scale(m, { scale, scale, 1.0f }));
-        spritebatch.Draw(newTexture, { 0, 0 });
-        spritebatch.End();
-        framebuffer.End();
+        spriteBatch.Begin(glm::scale(m, { scale, scale, 1.0f }));
+        spriteBatch.Draw(newTexture, { 0, 0 });
+        spriteBatch.End();
+        frameBuffer.End();
         
         newTexture = nullptr;
         newTexture = tempTexture;
@@ -174,7 +174,7 @@ void PandaSDL::AssetManager::UnloadShader(std::string asset)
     //std::cout << "Unloaded Shader " << asset << std::endl;
 }
 
-std::shared_ptr<PandaSDL::Spritefont> PandaSDL::AssetManager::LoadSpritefont(std::string asset)
+std::shared_ptr<PandaSDL::SpriteFont> PandaSDL::AssetManager::LoadSpritefont(std::string asset)
 {
     auto font = GetSpritefont(asset);
 
@@ -183,12 +183,12 @@ std::shared_ptr<PandaSDL::Spritefont> PandaSDL::AssetManager::LoadSpritefont(std
     
     auto filepath = GetAssetPath(asset);
 
-    auto newFont = std::make_shared<PandaSDL::Spritefont>();
+    auto newFont = std::make_shared<PandaSDL::SpriteFont>();
     newFont->Create(filepath);
     
-    _fontCache.insert(std::pair<std::string, std::shared_ptr<PandaSDL::Spritefont>>(asset, newFont));
+    _fontCache.insert(std::pair<std::string, std::shared_ptr<PandaSDL::SpriteFont>>(asset, newFont));
     
-    //std::cout << "Loaded Spritefont " << asset << std::endl;
+    //std::cout << "Loaded SpriteFont " << asset << std::endl;
     return newFont;
 }
 
@@ -250,7 +250,7 @@ std::shared_ptr<PandaSDL::Shader> PandaSDL::AssetManager::GetShader(std::string 
     return _shaderCache[asset];
 }
 
-std::shared_ptr<PandaSDL::Spritefont> PandaSDL::AssetManager::GetSpritefont(std::string asset)
+std::shared_ptr<PandaSDL::SpriteFont> PandaSDL::AssetManager::GetSpritefont(std::string asset)
 {
     if (_fontCache.count(asset) == 0)
         return nullptr;

@@ -1,16 +1,16 @@
-#include "framebuffer.h"
+#include "frame_buffer.h"
 
-PandaSDL::Framebuffer::Framebuffer()
+PandaSDL::FrameBuffer::FrameBuffer()
     : _id(0), _deleted(false), _game(nullptr), _target(nullptr), _depthBufferDeleted(false), _depthEnabled(false), _depthBufferID(0)
 {
 }
 
-PandaSDL::Framebuffer::~Framebuffer()
+PandaSDL::FrameBuffer::~FrameBuffer()
 {
     Free();
 }
 
-void PandaSDL::Framebuffer::Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL::Texture2D> target)
+void PandaSDL::FrameBuffer::Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL::Texture2D> target)
 {
     _target = target;
     _game = game;
@@ -41,14 +41,14 @@ void PandaSDL::Framebuffer::Start(PandaSDL::Game* game, std::shared_ptr<PandaSDL
     glViewport(0, 0, _target->GetWidth(), _target->GetHeight());
 }
 
-void PandaSDL::Framebuffer::End()
+void PandaSDL::FrameBuffer::End()
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     _game->ResetViewport();
     Free();
 }
 
-void PandaSDL::Framebuffer::Free()
+void PandaSDL::FrameBuffer::Free()
 {
     if (_deleted)
         return;

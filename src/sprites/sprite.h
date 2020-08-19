@@ -4,12 +4,11 @@
 #include "../general/globals.h"
 #include "../assets/asset_manager.h"
 #include "../graphics/texture_2D.h"
-#include "../graphics/spritebatch.h"
+#include "../graphics/sprite_batch.h"
 #include "../graphics/color.h"
 #include "../math/rectangle.h"
 #include "../math/vector2.h"
 #include "../general/timer.h"
-#include "../graphics/spritebatch.h"
 
 namespace PandaSDL
 {
@@ -24,7 +23,7 @@ namespace PandaSDL
 
             void LoadTexture(std::shared_ptr<PandaSDL::Texture2D> texture);
 
-            virtual void Draw(std::shared_ptr<PandaSDL::Spritebatch> spriteBatch, PandaSDL::Vector2 position);
+            virtual void Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, PandaSDL::Vector2 position);
             virtual void Update(const PandaSDL::Timer& gameTimer);
 
             std::shared_ptr<PandaSDL::Texture2D> Texture;

@@ -3,7 +3,7 @@
 
 #include "../general/game.h"
 #include "../general/camera_2D.h"
-#include "../graphics/spritebatch.h"
+#include "../graphics/sprite_batch.h"
 #include "../graphics/texture_2D.h"
 #include "tiled_map.h"
 #include "../math/vector2.h"
@@ -16,7 +16,7 @@ namespace PandaSDL
             SpritebatchTiledRenderer();
             ~SpritebatchTiledRenderer();
             
-            void Setup(std::shared_ptr<PandaSDL::TiledMap> tiledMap, std::shared_ptr<PandaSDL::Spritebatch> spriteBatch);
+            void Setup(std::shared_ptr<PandaSDL::TiledMap> tiledMap, std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch);
             void Draw(const PandaSDL::Camera2D &camera, bool below, PandaSDL::Vector2 worldOffset = PandaSDL::Vector2::Zero());
             
         protected:
@@ -24,7 +24,7 @@ namespace PandaSDL
             unsigned int _tileWidth, _tileHeight;
             
             std::shared_ptr<PandaSDL::TiledMap> _tiledMap;
-            std::shared_ptr<PandaSDL::Spritebatch> _spriteBatch;
+            std::shared_ptr<PandaSDL::SpriteBatch> _spriteBatch;
             std::shared_ptr<PandaSDL::Texture2D> _tilesheet;
             
             std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> _belowLayers;
