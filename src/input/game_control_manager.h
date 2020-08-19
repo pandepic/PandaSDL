@@ -11,7 +11,7 @@ namespace PandaSDL
     {
         std::string Name;
         std::vector<std::vector<std::string>> ControlKeys;
-        PandaSDL::eKeyboardButtonState State;
+        //PandaSDL::eKeyboardButtonState State;
     };
     
     class HandleGameControls
@@ -20,7 +20,14 @@ namespace PandaSDL
             HandleGameControls() {}
             virtual ~HandleGameControls() {}
             
-            virtual void HandleGameControl(const std::string &controlName, const PandaSDL::KeyboardState &keyboardState, const PandaSDL::MouseState &mouseState, const Timer& gameTimer) = 0;
+            virtual void HandleGameControl(
+                const std::string                       &controlName,
+                const PandaSDL::eKeyboardButtonState    &state,
+                const PandaSDL::KeyboardState           &keyboardState,
+                const PandaSDL::MouseState              &mouseState,
+                const PandaSDL::Timer                   &gameTimer) = 0;
+                
+            //virtual void HandleGameControl(const std::string &controlName, const PandaSDL::MouseState &mouseState, const Timer& gameTimer) = 0; MOUSE VERSION
     };
     
     class GameControlManager : public PandaSDL::HandleKeyboardInput, public PandaSDL::HandleMouseInput
@@ -49,8 +56,15 @@ namespace PandaSDL
             std::map<std::string, PandaSDL::KeyboardGameControl> _keyboardControls;
             std::vector<HandleGameControls*> _gameControlHandlers;
             
-            void CheckKeyboardControl(const PandaSDL::KeyboardGameControl &keyboardControl, const std::string &keyString, const PandaSDL::KeyboardState &keyboardState, const Timer& gameTimer);
-            void TriggerGameControl(const std::string &controlName, const Timer& gameTimer);
+            void CheckKeyboardControl(
+                const PandaSDL::KeyboardGameControl     &keyboardControl,
+                const PandaSDL::eKeyboardButtonState    &state,
+                const std::string                       &keyString,
+                const PandaSDL::KeyboardState           &keyboardState,
+                const Timer                             &gameTimer);
+                
+            void TriggerGameControl(const std::string &controlName, const PandaSDL::eKeyboardButtonState &state, const Timer& gameTimer);
+            //void TriggerGameControl(const std::string &controlName, const Timer& gameTimer); MOUSE VERSION
     };
 }
 

@@ -51,11 +51,13 @@ std::string PandaSDL::SpriteBatch::DefaultFontShaderFragmentCode =
 "    color = fColour * sampled;\n"
 "}\n";
 
+bool PandaSDL::SpriteBatch::DefaultShadersInitialised = false;
 glm::mat4 PandaSDL::SpriteBatch::_defaultTransform = glm::mat4(1.0f);
 
 PandaSDL::SpriteBatch::SpriteBatch()
 : _begin(false), _initialised(false)
 {
+    CheckDefaultShaders();
 }
 
 PandaSDL::SpriteBatch::~SpriteBatch()
@@ -437,4 +439,15 @@ void PandaSDL::SpriteBatch::Clear()
     _currentBatch.clear();
     _batchVertices.clear();
     _begin = false;
+}
+
+void PandaSDL::SpriteBatch::CheckDefaultShaders()
+{
+    if (PandaSDL::SpriteBatch::DefaultShadersInitialised)
+        return;
+    
+    PandaSDL::SpriteBatch::DefaultSpriteShader = PandaSDL::Game::AssetManager.LoadShaderFromString("DefaultSpriteShader", PandaSDL::SpriteBatch::DefaultSpriteShaderVertexCode, PandaSDL::SpriteBatch::DefaultSpriteShaderFragmentCode);
+    PandaSDL::SpriteBatch::DefaultFontShader = PandaSDL::Game::AssetManager.LoadShaderFromString("DefaultFontShader", PandaSDL::SpriteBatch::DefaultFontShaderVertexCode, PandaSDL::SpriteBatch::DefaultFontShaderFragmentCode);
+    
+    PandaSDL::SpriteBatch::DefaultShadersInitialised = true;
 }

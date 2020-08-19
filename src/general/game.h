@@ -54,7 +54,6 @@ namespace PandaSDL
             
             void SetGamestate(PandaSDL::Gamestate* NewState);
             void SetNextGamestate(PandaSDL::Gamestate* NewState);
-            void LoadDefaultShaders(std::string spriteAssetName = "DefaultSpriteShader", std::string fontAssetName = "DefaultFontShader");
             
             void Quit();
 

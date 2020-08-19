@@ -36,7 +36,6 @@ void PandaSDL::GameControlManager::Setup(std::string settingsSection)
                 PandaSDL::KeyboardGameControl newControl;
                 
                 newControl.Name = setting.Name;
-                newControl.State = PandaSDL::StringToKeyboardButtonState[setting.Attributes["State"]];
                 
                 auto controlComboSplit = PandaSDL::SplitString(setting.Value, ",");
                 
@@ -81,14 +80,14 @@ void PandaSDL::GameControlManager::RemoveGameControlHandler(HandleGameControls* 
        _gameControlHandlers.erase(std::remove(_gameControlHandlers.begin(), _gameControlHandlers.end(), gameControlHandler), _gameControlHandlers.end());
 }
 
-void PandaSDL::GameControlManager::TriggerGameControl(const std::string &controlName, const Timer& gameTimer)
+void PandaSDL::GameControlManager::TriggerGameControl(const std::string &controlName, const PandaSDL::eKeyboardButtonState &state, const Timer& gameTimer)
 {
     auto keyboardState = PandaSDL::Game::InputManager.GetKeyboardState();
     auto mouseState = PandaSDL::Game::InputManager.GetMouseState();
     
     for (const auto &gameControlHandler : _gameControlHandlers)
     {
-        gameControlHandler->HandleGameControl(controlName, keyboardState, mouseState, gameTimer);
+        gameControlHandler->HandleGameControl(controlName, state, keyboardState, mouseState, gameTimer);
     }
 }
 
@@ -96,8 +95,7 @@ void PandaSDL::GameControlManager::HandleKeyPressed(const SDL_Keycode &keyCode, 
 {
     for (const auto &[key, val] : _keyboardControls)
     {
-        if (val.State == PandaSDL::eKeyboardButtonState::PRESSED)
-            CheckKeyboardControl(val, keyString, keyboardState, gameTimer);
+        CheckKeyboardControl(val, PandaSDL::eKeyboardButtonState::PRESSED, keyString, keyboardState, gameTimer);
     }
 }
 
@@ -105,8 +103,7 @@ void PandaSDL::GameControlManager::HandleKeyReleased(const SDL_Keycode &keyCode,
 {
     for (const auto &[key, val] : _keyboardControls)
     {
-        if (val.State == PandaSDL::eKeyboardButtonState::RELEASED)
-            CheckKeyboardControl(val, keyString, keyboardState, gameTimer);
+        CheckKeyboardControl(val, PandaSDL::eKeyboardButtonState::RELEASED, keyString, keyboardState, gameTimer);
     }
 }
 
@@ -114,12 +111,16 @@ void PandaSDL::GameControlManager::HandleKeyDown(const SDL_Keycode &keyCode, con
 {
     for (const auto &[key, val] : _keyboardControls)
     {
-        if (val.State == PandaSDL::eKeyboardButtonState::DOWN)
-            CheckKeyboardControl(val, keyString, keyboardState, gameTimer);
+        CheckKeyboardControl(val, PandaSDL::eKeyboardButtonState::DOWN, keyString, keyboardState, gameTimer);
     }
 }
 
-void PandaSDL::GameControlManager::CheckKeyboardControl(const PandaSDL::KeyboardGameControl &keyboardControl, const std::string &keyString, const PandaSDL::KeyboardState &keyboardState, const Timer& gameTimer)
+void PandaSDL::GameControlManager::CheckKeyboardControl(
+    const PandaSDL::KeyboardGameControl &keyboardControl,
+    const PandaSDL::eKeyboardButtonState &state,
+    const std::string &keyString,
+    const PandaSDL::KeyboardState &keyboardState,
+    const Timer& gameTimer)
 {
     for (const auto &controlKeyList : keyboardControl.ControlKeys)
     {
@@ -157,7 +158,7 @@ void PandaSDL::GameControlManager::CheckKeyboardControl(const PandaSDL::Keyboard
         }
         
         if (mainKey && otherKeys)
-            TriggerGameControl(keyboardControl.Name, gameTimer);
+            TriggerGameControl(keyboardControl.Name, state, gameTimer);
     }
 }
 

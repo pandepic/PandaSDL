@@ -44,7 +44,14 @@ namespace PandaSDL
             std::vector<PandaSDL::TileBatchLayer> Layers;
             std::shared_ptr<PandaSDL::Texture2D> AtlasTexture;
             
-            void BeginBuild(unsigned int width, unsigned int height, unsigned int tileWidth, unsigned int tileHeight, std::shared_ptr<PandaSDL::Texture2D> atlasTexture, std::shared_ptr<Shader> tileShader = DefaultTileShader);
+            void BeginBuild(
+                unsigned int                            width,
+                unsigned int                            height,
+                unsigned int                            tileWidth,
+                unsigned int                            tileHeight,
+                std::shared_ptr<PandaSDL::Texture2D>    atlasTexture,
+                std::shared_ptr<Shader>                 tileShader =    DefaultTileShader);
+            
             void SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned char x, unsigned char y);
             void SetTileAtPosition(unsigned int posx, unsigned int posy, unsigned int tileIndex);
             void SetTileAtIndex(unsigned int index, unsigned char x, unsigned char y);
