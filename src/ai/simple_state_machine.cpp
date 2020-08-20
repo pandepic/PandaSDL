@@ -101,9 +101,20 @@ void PandaSDL::SimpleStateMachine::SetNextState(std::shared_ptr<PandaSDL::Simple
     }
 }
 
+void PandaSDL::SimpleStateMachine::SetPrevState()
+{
+    if (_prevState != nullptr)
+        SetCurrentStateInternal(_prevState);
+}
+
 void PandaSDL::SimpleStateMachine::Start(std::string initialState)
 {
-    SetCurrentStateInternal(_states[initialState]);
+    Start(_states[initialState]);
+}
+
+void PandaSDL::SimpleStateMachine::Start(std::shared_ptr<PandaSDL::SimpleStateBase> state)
+{
+    SetCurrentStateInternal(state);
 }
 
 void PandaSDL::SimpleStateMachine::Update(const PandaSDL::Timer &gameTimer)
@@ -127,4 +138,14 @@ void PandaSDL::SimpleStateMachine::SetCurrentStateInternal(std::shared_ptr<Simpl
     
     _currentState = state;
     _currentState->Begin();
+}
+
+std::string PandaSDL::SimpleStateMachine::GetCurrentStateName()
+{
+    return _currentState->Name;
+}
+
+std::shared_ptr<PandaSDL::SimpleStateBase> PandaSDL::SimpleStateMachine::GetCurrentState()
+{
+    return _currentState;
 }
