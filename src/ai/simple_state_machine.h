@@ -5,8 +5,14 @@
 
 namespace PandaSDL
 {
+    // forward declarations
+    class SimpleStateMachine;
+    
     struct SimpleStateBase
     {
+        SimpleStateBase() {}
+        SimpleStateBase(std::string name) : Name(name) {}
+        
         std::string Name;
         SimpleStateMachine *Parent;
         
@@ -17,6 +23,9 @@ namespace PandaSDL
     
     struct SimpleStateTimedBase : public SimpleStateBase
     {
+        SimpleStateTimedBase() {}
+        SimpleStateTimedBase(std::string name) : SimpleStateBase(name) {}
+        
         int Duration;
         
         virtual void Begin() override {}
@@ -32,7 +41,7 @@ namespace PandaSDL
             ~SimpleStateMachine();
             
             std::string GetCurrentStateName();
-            std::shared_ptr<SimpleStateBase> GetCurrentState();
+            std::shared_ptr<PandaSDL::SimpleStateBase> GetCurrentState();
             
             void RegisterState(std::shared_ptr<PandaSDL::SimpleStateBase> state);
             void RemoveState(std::string name);
@@ -43,7 +52,10 @@ namespace PandaSDL
             void SetNextState(std::string name, bool allowSame = false);
             void SetNextState(std::shared_ptr<PandaSDL::SimpleStateBase> state, bool allowSame = false);
             
+            void SetPrevState();
+            
             void Start(std::string initialState);
+            void Start(std::shared_ptr<PandaSDL::SimpleStateBase> state);
             void Update(const PandaSDL::Timer &gameTimer);
             
         protected:
