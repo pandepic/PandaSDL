@@ -17,6 +17,10 @@ namespace PandaSDL
             bool IsEmpty();
             std::string ToString();
             
+            bool Contains(const PandaSDL::Vector2 &vec) const;
+            bool Contains(const PandaSDL::Rectangle &rect) const;
+            bool Intersects(const PandaSDL::Rectangle &rect) const;
+            
             // operators
             PandaSDL::Rectangle operator+(const PandaSDL::Rectangle &r);
             PandaSDL::Rectangle operator-(const PandaSDL::Rectangle &r);
@@ -28,7 +32,9 @@ namespace PandaSDL
             PandaSDL::Rectangle operator*(const PandaSDL::Vector2 &v);
             PandaSDL::Rectangle operator/(const PandaSDL::Vector2 &v);
 
-            static Rectangle Empty();
+            static PandaSDL::Rectangle Empty();
+            
+            static PandaSDL::Rectangle Intersects(const PandaSDL::Rectangle &rect1, const PandaSDL::Rectangle &rect2);
 
         protected:
     };

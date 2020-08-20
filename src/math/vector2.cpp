@@ -46,24 +46,36 @@ std::string PandaSDL::Vector2::ToString()
     return "[" + std::to_string(X) + ":" + std::to_string(Y) + "]";
 }
 
-PandaSDL::Vector2 PandaSDL::Vector2::operator+(const Vector2 &v)
+double PandaSDL::Vector2::Distance(const PandaSDL::Vector2 &vec) const
 {
-    return PandaSDL::Vector2(X + v.X, Y + v.Y);
+    double vX = X - vec.X;
+    double vY = Y - vec.Y;
+    return sqrt((vX * vX) + (vY * vY));
 }
 
-PandaSDL::Vector2 PandaSDL::Vector2::operator-(const Vector2 &v)
+double PandaSDL::Vector2::Distance(const PandaSDL::Vector2 &vec1, const PandaSDL::Vector2 &vec2)
 {
-    return PandaSDL::Vector2(X - v.X, Y - v.Y);
+    return vec1.Distance(vec2);
 }
 
-PandaSDL::Vector2 PandaSDL::Vector2::operator*(const Vector2 &v)
+PandaSDL::Vector2 PandaSDL::Vector2::operator+(const Vector2 &vec)
 {
-    return PandaSDL::Vector2(X * v.X, Y * v.Y);
+    return PandaSDL::Vector2(X + vec.X, Y + vec.Y);
 }
 
-PandaSDL::Vector2 PandaSDL::Vector2::operator/(const Vector2 &v)
+PandaSDL::Vector2 PandaSDL::Vector2::operator-(const Vector2 &vec)
 {
-    return PandaSDL::Vector2(X / v.X, Y / v.Y);
+    return PandaSDL::Vector2(X - vec.X, Y - vec.Y);
+}
+
+PandaSDL::Vector2 PandaSDL::Vector2::operator*(const Vector2 &vec)
+{
+    return PandaSDL::Vector2(X * vec.X, Y * vec.Y);
+}
+
+PandaSDL::Vector2 PandaSDL::Vector2::operator/(const Vector2 &vec)
+{
+    return PandaSDL::Vector2(X / vec.X, Y / vec.Y);
 }
 
 PandaSDL::Vector2 PandaSDL::Vector2::operator*(const int &i)
@@ -81,34 +93,34 @@ PandaSDL::Vector2 PandaSDL::Vector2::operator*(const double &d)
     return PandaSDL::Vector2(X * d, Y * d);
 }
 
-PandaSDL::Vector2& PandaSDL::Vector2::operator+=(const PandaSDL::Vector2 &v)
+PandaSDL::Vector2& PandaSDL::Vector2::operator+=(const PandaSDL::Vector2 &vec)
 {
-    X += v.X;
-    Y += v.Y;
+    X += vec.X;
+    Y += vec.Y;
     
     return *this;
 }
 
-PandaSDL::Vector2& PandaSDL::Vector2::operator-=(const PandaSDL::Vector2 &v)
+PandaSDL::Vector2& PandaSDL::Vector2::operator-=(const PandaSDL::Vector2 &vec)
 {
-    X -= v.X;
-    Y -= v.Y;
+    X -= vec.X;
+    Y -= vec.Y;
     
     return *this;
 }
 
-PandaSDL::Vector2& PandaSDL::Vector2::operator*=(const PandaSDL::Vector2 &v)
+PandaSDL::Vector2& PandaSDL::Vector2::operator*=(const PandaSDL::Vector2 &vec)
 {
-    X *= v.X;
-    Y *= v.Y;
+    X *= vec.X;
+    Y *= vec.Y;
     
     return *this;
 }
 
-PandaSDL::Vector2& PandaSDL::Vector2::operator/=(const PandaSDL::Vector2 &v)
+PandaSDL::Vector2& PandaSDL::Vector2::operator/=(const PandaSDL::Vector2 &vec)
 {
-    X /= v.X;
-    Y /= v.Y;
+    X /= vec.X;
+    Y /= vec.Y;
     
     return *this;
 }

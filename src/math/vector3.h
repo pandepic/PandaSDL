@@ -33,7 +33,7 @@ namespace PandaSDL
             PandaSDL::Vector3& operator*=(const PandaSDL::Vector3 &v);
             PandaSDL::Vector3& operator/=(const PandaSDL::Vector3 &v);
 
-            static Vector3 Zero();
+            static PandaSDL::Vector3 Zero();
 
         protected:
     };
