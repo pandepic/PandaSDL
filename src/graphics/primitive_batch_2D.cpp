@@ -57,10 +57,7 @@ void PandaSDL::PrimitiveBatch2D::Setup(int screenWidth, int screenHeight, bool i
     
     _vao = std::make_unique<VertexArrayObject>(true);
     _vbo = _vao->AddVertexBufferObject(sizeof(PrimitiveBatchVertex) * _maxBatchSize * PANDASDL_PRIMITIVE_QUAD_VERTEX_COUNT, nullptr, GL_DYNAMIC_DRAW, true);
-    
-    _vao->VertexAttribPtrF(2, sizeof(PrimitiveBatchVertex), (void *)(offsetof(PrimitiveBatchVertex, Position)));
-    _vao->VertexAttribPtrF(4, sizeof(PrimitiveBatchVertex), (void *)(offsetof(PrimitiveBatchVertex, Colour)));
-    
+    _vao->ApplyVertexAttribTypeMapF(PrimitiveBatchVertex::VertexAttribMap());
     _vao->Unbind(true);
     
     _initialised = true;
