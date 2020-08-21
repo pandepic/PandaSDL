@@ -11,6 +11,16 @@
 
 namespace PandaSDL
 {
+    // used to map data from a struct to vertex attrib pointer where all variables in the struct are floats
+    // eg. static std::vector<VertexAttribTypeMapFVar> VertexAttribMap() { return { 2, 2, 4 }; } for a struct with vec2, vec2, vec4
+    struct VertexAttribTypeMapFVar
+    {
+        VertexAttribTypeMapFVar(unsigned int floatCount, bool normalize = false) : FloatCount(floatCount), Normalize(normalize) {}
+        
+        unsigned int FloatCount;
+        bool Normalize;
+    };
+    
     class BufferObject
     {
         public:
@@ -59,6 +69,7 @@ namespace PandaSDL
             void Bind(bool bindBuffers = false);
             void Unbind(bool unbindBuffers = false);
             void VertexAttribPtrF(int size, int stride, const void *offsetPtr, bool normalize = false);
+            void ApplyVertexAttribTypeMapF(const std::vector<VertexAttribTypeMapFVar> &map); // map a struct where all variables are floats
             
             std::shared_ptr<PandaSDL::VertexBufferObject> AddVertexBufferObject(int size, const void *data = nullptr, unsigned int hint = GL_STATIC_DRAW, bool bind = false);
             std::shared_ptr<PandaSDL::IndexBufferObject> AddIndexBufferObject(int size, const void *data = nullptr, unsigned int hint = GL_STATIC_DRAW, bool bind = false);

@@ -107,6 +107,25 @@ void PandaSDL::VertexArrayObject::VertexAttribPtrF(int size, int stride, const v
     _attribPtrIndex += 1;
 }
 
+void PandaSDL::VertexArrayObject::ApplyVertexAttribTypeMapF(const std::vector<VertexAttribTypeMapFVar> &map)
+{
+    intptr_t offset = 0;
+    unsigned int typeSize = 0;
+    
+    for (const auto &var : map)
+    {
+        typeSize += sizeof(float) * var.FloatCount;
+    }
+    
+    for (const auto &var : map)
+    {
+        glVertexAttribPointer(_attribPtrIndex, var.FloatCount, GL_FLOAT, var.Normalize ? GL_TRUE : GL_FALSE, typeSize, (void *)offset);
+        glEnableVertexAttribArray(_attribPtrIndex);
+        _attribPtrIndex += 1;
+        offset += sizeof(float) * var.FloatCount;
+    }
+}
+
 std::shared_ptr<PandaSDL::VertexBufferObject> PandaSDL::VertexArrayObject::AddVertexBufferObject(int size, const void *data, unsigned int hint, bool bind)
 {
     auto newVBO = std::make_shared<PandaSDL::VertexBufferObject>(size, data, hint);

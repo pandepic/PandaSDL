@@ -33,6 +33,8 @@ namespace PandaSDL
         glm::vec2 Position;
         glm::vec2 TexCoords;
         glm::vec4 Colour;
+        
+        static std::vector<VertexAttribTypeMapFVar> VertexAttribMap() { return { 2, 2, 4 }; }
     };
 
     #pragma pack(pop)

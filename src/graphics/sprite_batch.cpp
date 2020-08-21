@@ -106,11 +106,7 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
     _vao = std::make_unique<VertexArrayObject>(true);
     _vbo = _vao->AddVertexBufferObject(sizeof(SpriteBatchVertex) * _maxBatchSize * PANDASDL_QUAD_VERTEX_COUNT, nullptr, GL_DYNAMIC_DRAW, true);
     _ibo = _vao->AddIndexBufferObject(sizeof(indices), indices, GL_STATIC_DRAW, true);
-    
-    _vao->VertexAttribPtrF(2, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Position)));
-    _vao->VertexAttribPtrF(2, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, TexCoords)));
-    _vao->VertexAttribPtrF(4, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Colour)));
-    
+    _vao->ApplyVertexAttribTypeMapF(SpriteBatchVertex::VertexAttribMap());
     _vao->Unbind(true);
 
     float vertices[] = {
