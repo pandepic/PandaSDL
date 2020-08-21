@@ -73,12 +73,9 @@ void PandaSDL::Game::Setup(PandaSDL::Game* gameInstance, std::string windowName,
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::GLEW_INIT_FAILED);
 
     if (glDebug)
-    {
-        glEnable(GL_DEBUG_OUTPUT);
-        glDebugMessageCallback(GLErrorMessageCallback, 0);
-    }
+        PandaSDL::GraphicsPlatform::EnableDebugOutput();
     
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    PandaSDL::GraphicsPlatform::SetPixelStorageUnpackAlignment(1);
     
     //std::cout << "GL Version: " << glGetString(GL_VERSION) << std::endl;
 
@@ -216,18 +213,18 @@ int PandaSDL::Game::Run()
 
 void PandaSDL::Game::ResetViewport()
 {
-    glViewport(0, 0, _windowRect.Width, _windowRect.Height);
+    PandaSDL::GraphicsPlatform::SetViewport(0, 0, _windowRect.Width, _windowRect.Height);
 }
 
 void PandaSDL::Game::SetClearColor(PandaSDL::Color color)
 {
     _windowClearColor = color;
-    glClearColor(_windowClearColor.R, _windowClearColor.G, _windowClearColor.B, _windowClearColor.A);
+    PandaSDL::GraphicsPlatform::SetClearColor(_windowClearColor.R, _windowClearColor.G, _windowClearColor.B, _windowClearColor.A);
 }
 
 void PandaSDL::Game::Clear()
 {
-    glClear(_clearFlags);
+    PandaSDL::GraphicsPlatform::Clear(_clearFlags);
 }
 
 void PandaSDL::Game::Clear(PandaSDL::Color color)
@@ -249,8 +246,8 @@ void PandaSDL::Game::EnableBlend(GLenum sfactor, GLenum dfactor)
     if (_blendEnabled)
         return;
     
-    glEnable(GL_BLEND);
-    glBlendFunc(sfactor, dfactor);
+    PandaSDL::GraphicsPlatform::EnableFeature(GL_BLEND);
+    PandaSDL::GraphicsPlatform::SetBlendFunc(sfactor, dfactor);
     
     _blendEnabled = true;
 }
@@ -260,9 +257,9 @@ void PandaSDL::Game::EnableDepth(GLenum func)
     if (_depthEnabled)
         return;
     
-    glEnable(GL_DEPTH_TEST);
-    glDepthFunc(func);
-    glClear(GL_DEPTH_BUFFER_BIT);
+    PandaSDL::GraphicsPlatform::EnableFeature(GL_DEPTH_TEST);
+    PandaSDL::GraphicsPlatform::SetDepthFunc(func);
+    PandaSDL::GraphicsPlatform::Clear(GL_DEPTH_BUFFER_BIT);
     
     _clearFlags = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
     _depthEnabled = true;

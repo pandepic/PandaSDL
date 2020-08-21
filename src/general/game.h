@@ -20,6 +20,7 @@
 #include "gamestate.h"
 #include "settings_manager.h"
 #include "../input/game_control_manager.h"
+#include "../graphics/graphics_platform_opengl.h"
 
 namespace PandaSDL
 {

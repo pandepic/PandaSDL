@@ -143,3 +143,56 @@ void PandaSDL::GraphicsPlatform::SetActiveTexture(int index)
 {
     glActiveTexture(GL_TEXTURE0 + index);
 }
+
+void PandaSDL::GraphicsPlatform::Clear(unsigned int mask)
+{
+    glClear(mask);
+}
+
+void PandaSDL::GraphicsPlatform::SetClearColor(float r, float g, float b, float a)
+{
+    glClearColor(r, g, b, a);
+}
+
+void PandaSDL::GraphicsPlatform::EnableFeature(unsigned int feature)
+{
+    glEnable(feature);
+}
+
+void PandaSDL::GraphicsPlatform::SetBlendFunc(unsigned int sfactor, unsigned int dfactor)
+{
+    glBlendFunc(sfactor, dfactor);
+}
+
+void PandaSDL::GraphicsPlatform::SetDepthFunc(unsigned int func)
+{
+    glDepthFunc(func);
+}
+
+void PandaSDL::GraphicsPlatform::SetViewport(int x, int y, int width, int height)
+{
+    glViewport(x, y, width, height);
+}
+
+void PandaSDL::GraphicsPlatform::SetPixelStoragePackAlignment(int value)
+{
+    glPixelStorei(GL_PACK_ALIGNMENT, value);
+}
+
+void PandaSDL::GraphicsPlatform::SetPixelStorageUnpackAlignment(int value)
+{
+    glPixelStorei(GL_UNPACK_ALIGNMENT, value);
+}
+
+void PandaSDL::GraphicsPlatform::EnableDebugOutput()
+{
+    EnableFeature(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(GLErrorMessageCallback, 0);
+}
+
+void GLAPIENTRY PandaSDL::GraphicsPlatform::GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+{
+    fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
+           ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),
+            type, severity, message );
+}

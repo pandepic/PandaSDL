@@ -4,6 +4,9 @@
 #include "../../lib_include/GLEW/glew.h"
 #include <GL/gl.h>
 
+#include "../../lib_include/glm/glm.hpp"
+#include "../../lib_include/glm/gtc/type_ptr.hpp"
+
 #include "../general/globals.h"
 
 namespace PandaSDL
@@ -75,6 +78,17 @@ namespace PandaSDL
     {
         public:
             static void SetActiveTexture(int index);
+            static void Clear(unsigned int mask);
+            static void SetClearColor(float r, float g, float b, float a);
+            static void EnableFeature(unsigned int feature);
+            static void SetBlendFunc(unsigned int sfactor, unsigned int dfactor);
+            static void SetDepthFunc(unsigned int func);
+            static void SetViewport(int x, int y, int width, int height);
+            static void SetPixelStoragePackAlignment(int value);
+            static void SetPixelStorageUnpackAlignment(int value);
+            
+            static void EnableDebugOutput();
+            static void GLAPIENTRY GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
     };
 }
 
