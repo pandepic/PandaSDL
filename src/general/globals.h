@@ -8,6 +8,7 @@
 #define PANDASDL_DEFAULT_BATCH_SIZE 1000
 #define PANDASDL_SPRITE_FLOAT_COUNT 48
 #define PANDASDL_QUAD_VERTEX_COUNT 4
+#define PANDASDL_PRIMITIVE_QUAD_VERTEX_COUNT 6
 #define PANDASDL_QUAD_INDEX_COUNT 6
 #define PANDASDL_QUAD_VERTEX_FLOAT_COUNT 8
 #define PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT 24
@@ -94,6 +95,7 @@ namespace PandaSDL
         SPRITEBATCH_SETUP,
         SPRITEBATCH_BEGIN,
         SPRITEBATCH_DRAW,
+        SPRITEBATCH_FLUSH,
         FRAMEBUFFER_START_FAILED,
         DYNAMIC_TEXTURE2D_INVALID_ID,
         ANIMATION_MANAGER_MISSING,
@@ -104,6 +106,10 @@ namespace PandaSDL
         SPRITEFONT_MAX_TEXTURE_SIZE_REACHED,
         LOADING_SETTINGS_FAILED,
         LOADING_TILEDMAP_FAILED,
+        PRIMITIVEBATCH_SETUP,
+        PRIMITIVEBATCH_BEGIN,
+        PRIMITIVEBATCH_DRAW,
+        GRAPHICS_BUFFER,
     };
 
     static std::map<ePandaSDLException, std::string> PandaSDLExceptionNames =
@@ -116,6 +122,7 @@ namespace PandaSDL
         { ePandaSDLException::SPRITEBATCH_SETUP, "SPRITEBATCH_SETUP" },
         { ePandaSDLException::SPRITEBATCH_BEGIN, "SPRITEBATCH_BEGIN" },
         { ePandaSDLException::SPRITEBATCH_DRAW, "SPRITEBATCH_DRAW" },
+        { ePandaSDLException::SPRITEBATCH_FLUSH, "SPRITEBATCH_FLUSH" },
         { ePandaSDLException::FRAMEBUFFER_START_FAILED, "FRAMEBUFFER_START_FAILED" },
         { ePandaSDLException::DYNAMIC_TEXTURE2D_INVALID_ID, "DYNAMIC_TEXTURE2D_INVALID_ID" },
         { ePandaSDLException::ANIMATION_MANAGER_MISSING, "ANIMATION_MANAGER_MISSING" },
@@ -125,12 +132,22 @@ namespace PandaSDL
         { ePandaSDLException::FREETYPE_LOADGLYPH_FAILED, "FREETYPE_LOADGLYPH_FAILED" },
         { ePandaSDLException::SPRITEFONT_MAX_TEXTURE_SIZE_REACHED, "SPRITEFONT_MAX_TEXTURE_SIZE_REACHED" },
         { ePandaSDLException::LOADING_SETTINGS_FAILED, "LOADING_SETTINGS_FAILED" },
-        { ePandaSDLException::LOADING_TILEDMAP_FAILED, "LOADING_TILEDMAP_FAILED" }
+        { ePandaSDLException::LOADING_TILEDMAP_FAILED, "LOADING_TILEDMAP_FAILED" },
+        { ePandaSDLException::PRIMITIVEBATCH_SETUP, "PRIMITIVEBATCH_SETUP" },
+        { ePandaSDLException::PRIMITIVEBATCH_BEGIN, "PRIMITIVEBATCH_BEGIN" },
+        { ePandaSDLException::PRIMITIVEBATCH_DRAW, "PRIMITIVEBATCH_DRAW" },
+        { ePandaSDLException::GRAPHICS_BUFFER, "GRAPHICS_BUFFER" }
     };
 
     static void ThrowException(ePandaSDLException type, std::string message = "")
     {
         throw std::runtime_error(PandaSDLExceptionNames[type] + " - " + message);
+    }
+    
+    template<typename E>
+    constexpr auto ToUnderlyingType(E e) 
+    {
+        return static_cast<typename std::underlying_type<E>::type>(e);
     }
 }
 

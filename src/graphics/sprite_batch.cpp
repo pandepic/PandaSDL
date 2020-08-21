@@ -62,15 +62,12 @@ PandaSDL::SpriteBatch::SpriteBatch()
 
 PandaSDL::SpriteBatch::~SpriteBatch()
 {
-    glDeleteVertexArrays(1, &_VAO);
-    glDeleteBuffers(1, &_VBO);
-    glDeleteBuffers(1, &_IBO);
 }
 
 void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invertY, std::shared_ptr<Shader> spriteShader, unsigned int maxBatchSize)
 {
     if (_initialised)
-        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_SETUP, "Setup can only be called once per Spritebatch.");
+        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_SETUP, "Setup can only be called once per SpriteBatch.");
     
     _screenWidth = screenWidth;
     _screenHeight = screenHeight;
@@ -83,23 +80,6 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
         _projection = glm::ortho(0.0f, (float)_screenWidth, (float)_screenHeight, 0.0f, -1.0f, 1.0f);
 
     _spriteShader->Use().SetInteger("image", 0);
-
-    glGenVertexArrays(1, &_VAO);
-    glGenBuffers(1, &_VBO);
-
-    glBindVertexArray(_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Position)));
-    glEnableVertexAttribArray(0);
-
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, TexCoords)));
-    glEnableVertexAttribArray(1);
-
-    glVertexAttribPointer(2, 4, GL_FLOAT, GL_FALSE, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Colour)));
-    glEnableVertexAttribArray(2);
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(SpriteBatchVertex) * _maxBatchSize * PANDASDL_QUAD_VERTEX_COUNT, nullptr, GL_DYNAMIC_DRAW);
     
     unsigned int indicesTemplate[PANDASDL_QUAD_INDEX_COUNT] = {
         0, 1, 2, // tri 1
@@ -123,13 +103,15 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
         indices[startIndex + 5] = indicesTemplate[5] + offset;
     }
     
-    glCreateBuffers(1, &_IBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+    _vao = std::make_unique<VertexArrayObject>(true);
+    _vbo = _vao->AddVertexBufferObject(sizeof(SpriteBatchVertex) * _maxBatchSize * PANDASDL_QUAD_VERTEX_COUNT, nullptr, GL_DYNAMIC_DRAW, true);
+    _ibo = _vao->AddIndexBufferObject(sizeof(indices), indices, GL_STATIC_DRAW, true);
     
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    _vao->VertexAttribPtrF(2, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Position)));
+    _vao->VertexAttribPtrF(2, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, TexCoords)));
+    _vao->VertexAttribPtrF(4, sizeof(SpriteBatchVertex), (void *)(offsetof(SpriteBatchVertex, Colour)));
+    
+    _vao->Unbind(true);
 
     float vertices[] = {
         0.0f, 1.0f, // bottom left (0)
@@ -296,7 +278,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
 
         glm::vec2 uv;
 
-        if (i == QuadVertexIndex::TOP_LEFT)
+        if (i == (int)QuadVertexIndex::TOP_LEFT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = (source.X + source.Width) * texelWidth;
@@ -311,7 +293,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.x = position.X;
             vertPosition.y = position.Y;
         }
-        else if (i == QuadVertexIndex::TOP_RIGHT)
+        else if (i == (int)QuadVertexIndex::TOP_RIGHT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = source.X * texelWidth;
@@ -326,7 +308,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.x = position.X + (scale.x * x);
             vertPosition.y = position.Y;
         }
-        else if (i == QuadVertexIndex::BOTTOM_LEFT)
+        else if (i == (int)QuadVertexIndex::BOTTOM_LEFT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = (source.X + source.Width) * texelWidth;
@@ -341,7 +323,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
             vertPosition.x = position.X;
             vertPosition.y = position.Y + (scale.y * y);
         }
-        else if (i == QuadVertexIndex::BOTTOM_RIGHT)
+        else if (i == (int)QuadVertexIndex::BOTTOM_RIGHT)
         {
             if (item.Flip == PandaSDL::eSpriteFlip::HORIZONTAL || item.Flip == PandaSDL::eSpriteFlip::BOTH)
                 uv.x = source.X * texelWidth;
@@ -382,24 +364,24 @@ void PandaSDL::SpriteBatch::End()
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before End.");
 
     bool firstTexture = true;
-    auto prevTextureID = 0;
-    auto textureID = 0;
+    std::shared_ptr<PandaSDL::Texture2D> prevTexture = nullptr;
+    std::shared_ptr<PandaSDL::Texture2D> currentTexture = nullptr;
 
     _spriteShader->Use();
     _spriteShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
     
-    glActiveTexture(GL_TEXTURE0); // todo : handle multiple textures per draw
+    PandaSDL::GraphicsPlatform::SetActiveTexture(0); // todo : handle multiple textures per draw
 
     for (const auto &batchItem : _currentBatch)
     {
         auto texture = batchItem.Texture;
 
-        if (firstTexture || texture->GetTextureID() != textureID)
+        if (firstTexture || texture != currentTexture)
         {
-            prevTextureID = textureID;
-            textureID = texture->GetTextureID();
+            prevTexture = currentTexture;
+            currentTexture = texture;
 
-            Flush(prevTextureID);
+            Flush(prevTexture);
 
             firstTexture = false;
         }
@@ -407,29 +389,27 @@ void PandaSDL::SpriteBatch::End()
         AddQuadVertices(batchItem);
 
         if ((_batchVertices.size() / PANDASDL_QUAD_VERTEX_COUNT) >= _maxBatchSize)
-            Flush(textureID);
+            Flush(currentTexture);
     }
 
-    Flush(textureID);
+    Flush(currentTexture);
     Clear();
 }
 
-void PandaSDL::SpriteBatch::Flush(int texture)
+void PandaSDL::SpriteBatch::Flush(std::shared_ptr<PandaSDL::Texture2D> texture)
 {
     if (_batchVertices.size() <= 0)
         return;
+    if (texture == nullptr)
+        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_FLUSH, "Can't flush the SpriteBatch with a null texture.");
 
-    glBindVertexArray(_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, _IBO);
-
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(SpriteBatchVertex) * _batchVertices.size(), &_batchVertices[0]);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glDrawElements(GL_TRIANGLES, (_batchVertices.size() / PANDASDL_QUAD_VERTEX_COUNT) * PANDASDL_QUAD_INDEX_COUNT, GL_UNSIGNED_INT, nullptr);
-
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    _vao->Bind(true);
+    
+    texture->Bind();
+    _vbo->BufferSubData(0, sizeof(SpriteBatchVertex) * _batchVertices.size(), &_batchVertices[0]);
+    _ibo->DrawElements((_batchVertices.size() / PANDASDL_QUAD_VERTEX_COUNT) * PANDASDL_QUAD_INDEX_COUNT);
+    
+    _vao->Unbind(true);
 
     _batchVertices.clear();
 }

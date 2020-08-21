@@ -11,6 +11,7 @@
 #include "texture_2D.h"
 #include "shader.h"
 #include "../math/vector2.h"
+#include "graphics_platform_opengl.h"
 
 namespace PandaSDL
 {
@@ -76,7 +77,8 @@ namespace PandaSDL
             unsigned int _tileWidth, _tileHeight;
             unsigned int _tilesheetTilesWidth, _tilesheetTilesHeight;
             
-            GLuint _VAO, _VBO;
+            std::unique_ptr<VertexArrayObject> _vao;
+            std::shared_ptr<VertexBufferObject> _vbo;
             std::shared_ptr<Shader> _tileShader;
             
             float _tileScale;

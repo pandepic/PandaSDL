@@ -99,24 +99,15 @@ void PandaSDL::TileBatch::Setup()
         -1.0f, 1.0f, 0.0f, 0.0f
     };
 
-    glGenVertexArrays(1, &_VAO);
-    glGenBuffers(1, &_VBO);
-
-    glBindVertexArray(_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
-    
     auto attribSize = sizeof(float) * 2;
     
-    glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(attribSize * 0));
-    glEnableVertexAttribArray(0);
+    _vao = std::make_unique<VertexArrayObject>(true);
+    _vbo = _vao->AddVertexBufferObject(sizeof(float) * PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT, vertices, GL_STATIC_DRAW, true);
     
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 4, (void *)(attribSize * 1));
-    glEnableVertexAttribArray(1);
+    _vao->VertexAttribPtrF(2, sizeof(float) * 4, (void *)(attribSize * 0));
+    _vao->VertexAttribPtrF(2, sizeof(float) * 4, (void *)(attribSize * 1));
     
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float) * PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT, vertices, GL_STATIC_DRAW);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    _vao->Unbind(true);
     
     _setup = true;
 }
@@ -233,8 +224,7 @@ void PandaSDL::TileBatch::Draw(PandaSDL::Vector2 position, bool below, float sca
 {
     _tileShader->Use();
     
-    glBindVertexArray(_VAO);
-    glBindBuffer(GL_ARRAY_BUFFER, _VBO);
+    _vao->Bind(true);
     
     _scaledViewportSize = { _viewportSize.x / scale, _viewportSize.y / scale };
     
@@ -246,10 +236,10 @@ void PandaSDL::TileBatch::Draw(PandaSDL::Vector2 position, bool below, float sca
     _tileShader->SetInteger("atlasImage", 0);
     _tileShader->SetInteger("dataImage", 1);
     
-    glActiveTexture(GL_TEXTURE0);
+    PandaSDL::GraphicsPlatform::SetActiveTexture(0);
     AtlasTexture->Bind();
     
-    glActiveTexture(GL_TEXTURE1);
+    PandaSDL::GraphicsPlatform::SetActiveTexture(1);
     
     for (const auto &layer : Layers)
     {
@@ -260,13 +250,12 @@ void PandaSDL::TileBatch::Draw(PandaSDL::Vector2 position, bool below, float sca
             
             layer.DataTexture->Bind();
             
-            glDrawArrays(GL_TRIANGLES, 0, 6);
+            _vbo->DrawArrays(0, 6);
         }
     }
     
-    glActiveTexture(GL_TEXTURE0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
+    PandaSDL::GraphicsPlatform::SetActiveTexture(0);
+    _vao->Unbind(true);
 }
 
 unsigned int PandaSDL::TileBatch::GetWidth()

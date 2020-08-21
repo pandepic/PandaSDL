@@ -14,10 +14,11 @@
 #include "shader.h"
 #include "color.h"
 #include "sprite_font.h"
+#include "graphics_platform_opengl.h"
 
 namespace PandaSDL
 {
-    enum QuadVertexIndex
+    enum class QuadVertexIndex
     {
         BOTTOM_LEFT = 0,
         TOP_RIGHT,
@@ -107,7 +108,9 @@ namespace PandaSDL
         protected:
             unsigned int _maxBatchSize;
             bool _initialised, _begin;
-            GLuint _VAO, _VBO, _IBO;
+            std::unique_ptr<VertexArrayObject> _vao;
+            std::shared_ptr<VertexBufferObject> _vbo;
+            std::shared_ptr<IndexBufferObject> _ibo;
             std::shared_ptr<Shader> _spriteShader;
             glm::mat4 _projection;
             
@@ -120,7 +123,7 @@ namespace PandaSDL
             std::vector<SpriteBatchVertex> _batchVertices;
 
             void AddQuadVertices(const SpriteBatchItem &item);
-            void Flush(int texture);
+            void Flush(std::shared_ptr<PandaSDL::Texture2D> texture);
             void CheckDefaultShaders();
     };
 }
