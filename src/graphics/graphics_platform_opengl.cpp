@@ -31,12 +31,12 @@ void PandaSDL::BufferObject::Unbind()
 void PandaSDL::BufferObject::BufferData(int size, const void *data)
 {
     _size = size;
-    glBufferData(_target, _size, data, _usage);
+    glNamedBufferData(_id, _size, data, _usage);
 }
 
 void PandaSDL::BufferObject::BufferSubData(int offset, int size, const void *data)
 {
-    glBufferSubData(_target, offset, size, data);
+    glNamedBufferSubData(_id, offset, size, data);
 }
 
 unsigned int PandaSDL::BufferObject::GetID()
