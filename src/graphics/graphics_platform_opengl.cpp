@@ -184,6 +184,11 @@ void PandaSDL::GraphicsPlatform::SetPixelStorageUnpackAlignment(int value)
     glPixelStorei(GL_UNPACK_ALIGNMENT, value);
 }
 
+std::string GetVersion()
+{
+    return std::string(reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+}
+
 void PandaSDL::GraphicsPlatform::EnableDebugOutput()
 {
     EnableFeature(GL_DEBUG_OUTPUT);

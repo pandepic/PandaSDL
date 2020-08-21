@@ -86,6 +86,7 @@ namespace PandaSDL
             static void SetViewport(int x, int y, int width, int height);
             static void SetPixelStoragePackAlignment(int value);
             static void SetPixelStorageUnpackAlignment(int value);
+            static std::string GetVersion();
             
             static void EnableDebugOutput();
             static void GLAPIENTRY GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
