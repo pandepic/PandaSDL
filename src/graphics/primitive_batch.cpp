@@ -27,10 +27,25 @@ std::string PandaSDL::PrimitiveBatch::DefaultPrimitiveShaderFragmentCode =
 "    color = fColour;\n"
 "}\n";
 
+bool PandaSDL::PrimitiveBatch::DefaultShadersInitialised = false;
+glm::mat4 PandaSDL::PrimitiveBatch::_defaultTransform = glm::mat4(1.0f);
+
 PandaSDL::PrimitiveBatch::PrimitiveBatch()
+    : _initialised(false), _begin(false)
 {
+    CheckDefaultShaders();
 }
 
 PandaSDL::PrimitiveBatch::~PrimitiveBatch()
 {
+}
+
+void PandaSDL::PrimitiveBatch::CheckDefaultShaders()
+{
+    if (PandaSDL::PrimitiveBatch::DefaultShadersInitialised)
+        return;
+    
+    PandaSDL::PrimitiveBatch::DefaultPrimitiveShader = PandaSDL::Game::AssetManager.LoadShaderFromString("DefaultPrimitiveShader", PandaSDL::PrimitiveBatch::DefaultPrimitiveShaderVertexCode, PandaSDL::PrimitiveBatch::DefaultPrimitiveShaderFragmentCode);
+    
+    PandaSDL::PrimitiveBatch::DefaultShadersInitialised = true;
 }

@@ -13,6 +13,7 @@
 #include "../math/vector2.h"
 #include "shader.h"
 #include "color.h"
+#include "../general/game.h"
 
 namespace PandaSDL
 {
@@ -33,14 +34,18 @@ namespace PandaSDL
             ~PrimitiveBatch();
             
             static std::shared_ptr<Shader> DefaultPrimitiveShader;
-            
             static std::string DefaultPrimitiveShaderVertexCode;
             static std::string DefaultPrimitiveShaderFragmentCode;
+            static bool DefaultShadersInitialised;
             
         protected:
             unsigned int _maxBatchSize;
             bool _initialised, _begin;
             GLuint _VAO, _VBO, _IBO;
+            
+            static glm::mat4 _defaultTransform;
+            
+            void CheckDefaultShaders();
     };
 }
 

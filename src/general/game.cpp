@@ -79,6 +79,8 @@ void PandaSDL::Game::Setup(PandaSDL::Game* gameInstance, std::string windowName,
     }
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
+    //std::cout << "GL Version: " << glGetString(GL_VERSION) << std::endl;
 
     PandaSDL::Game::GameInstance = gameInstance;
     PandaSDL::Game::AssetManager.LoadAssets(assetsPath);

@@ -98,7 +98,6 @@ namespace PandaSDL
 
             static std::shared_ptr<Shader> DefaultSpriteShader;
             static std::shared_ptr<Shader> DefaultFontShader;
-            
             static std::string DefaultSpriteShaderVertexCode;
             static std::string DefaultSpriteShaderFragmentCode;
             static std::string DefaultFontShaderVertexCode;
