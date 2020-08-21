@@ -16,7 +16,7 @@ Still very much an early stage work in progress with an initial focus on optimis
 * A simple state machine
 * An easy to use 2D camera
 * Keyboard and mouse input management
-* A game controls system that combined keyboard and mouse input combinations and turns them into meaningful control names like "Move Up", "Attack" etc.
+* A game controls system that transforms keyboard and mouse input combinations into meaningful control names like "Move Up", "Attack" etc.
 * Import maps created in Tiled with a built in optimised renderer for them that makes use of custom properties to load assets and control layer ordering
 
 ### Reserved asset names
