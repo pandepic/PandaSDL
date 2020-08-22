@@ -84,7 +84,6 @@ namespace PandaSDL
                 unsigned int                maxBatchSize =      PANDASDL_DEFAULT_PRIMITIVEBATCH_SIZE);
             
             void Begin(glm::mat4 transform = _defaultTransform);
-            void DrawRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation = 0.0f, bool outline = false, unsigned int outlineSize = 1);
             void DrawRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation = 0.0f, bool outline = false, unsigned int outlineSize = 1, PandaSDL::Color outlineColor = PANDASDL_COLOR_WHITE);
             void DrawFilledRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation = 0.0f);
             void DrawFilledRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, PandaSDL::Vector2 centre, float rotation = 0.0f);

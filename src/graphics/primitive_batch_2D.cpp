@@ -165,14 +165,6 @@ void PandaSDL::PrimitiveBatch2D::Begin(glm::mat4 transform)
     _begin = true;
 }
 
-void PandaSDL::PrimitiveBatch2D::DrawRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation, bool outline, unsigned int outlineSize)
-{
-    if (!_begin)
-        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::PRIMITIVEBATCH_DRAW, "Begin must be called before DrawRectangle.");
-    
-    DrawRectangle(rect, color, rotation, outline, outlineSize, color);
-}
-
 void PandaSDL::PrimitiveBatch2D::DrawRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation, bool outline, unsigned int outlineSize, PandaSDL::Color outlineColor)
 {
     if (!_begin)
