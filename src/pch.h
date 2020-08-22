@@ -14,6 +14,7 @@
 #include <fstream>
 #include <algorithm>
 #include <math.h>
+#include <functional>
 
 #include <vector>
 #include <array>
