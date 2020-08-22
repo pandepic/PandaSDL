@@ -11,6 +11,18 @@
 
 namespace PandaSDL
 {
+    enum class eBufferType
+    {
+        VERTEX,
+        INDEX
+    };
+    
+    static std::map<eBufferType, unsigned int> BufferTypeToFormat =
+    {
+        { eBufferType::VERTEX, GL_ARRAY_BUFFER },
+        { eBufferType::INDEX, GL_ELEMENT_ARRAY_BUFFER }
+    };
+    
     // used to map data from a struct to vertex attrib pointer where all variables in the struct are floats
     // eg. static std::vector<VertexAttribTypeMapFVar> VertexAttribMap() { return { 2, 2, 4 }; } for a struct with vec2, vec2, vec4
     struct VertexAttribTypeMapFVar
@@ -24,7 +36,7 @@ namespace PandaSDL
     class BufferObject
     {
         public:
-            BufferObject(unsigned int target, int size, const void *data = nullptr, unsigned int usage = GL_STATIC_DRAW);
+            BufferObject(eBufferType type, int size, const void *data = nullptr, unsigned int usage = GL_STATIC_DRAW);
             virtual ~BufferObject();
             
             void Bind();
@@ -40,12 +52,13 @@ namespace PandaSDL
             unsigned int _target, _usage;
             int _size;
             bool _bound;
+            eBufferType _type;
     };
     
     class VertexBufferObject : public BufferObject
     {
         public:
-            VertexBufferObject(int size, const void *data = nullptr, unsigned int hint = GL_STATIC_DRAW) : BufferObject(GL_ARRAY_BUFFER, size, data, hint) {}
+            VertexBufferObject(int size, const void *data = nullptr, unsigned int hint = GL_STATIC_DRAW) : BufferObject(eBufferType::VERTEX, size, data, hint) {}
             ~VertexBufferObject() {}
             
             void DrawArrays(int first, int count, unsigned int mode = GL_TRIANGLES);
@@ -54,7 +67,7 @@ namespace PandaSDL
     class IndexBufferObject : public BufferObject
     {
         public:
-            IndexBufferObject(int size, const void* data = nullptr, unsigned int hint = GL_STATIC_DRAW) : BufferObject(GL_ELEMENT_ARRAY_BUFFER, size, data, hint) {}
+            IndexBufferObject(int size, const void* data = nullptr, unsigned int hint = GL_STATIC_DRAW) : BufferObject(eBufferType::INDEX, size, data, hint) {}
             ~IndexBufferObject() {}
             
             void DrawElements(int count, const void *indices = nullptr, unsigned int mode = GL_TRIANGLES, unsigned int type = GL_UNSIGNED_INT);

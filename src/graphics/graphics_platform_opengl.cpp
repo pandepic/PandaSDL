@@ -1,9 +1,10 @@
 #include "graphics_platform_opengl.h"
 
-PandaSDL::BufferObject::BufferObject(unsigned int target, int size, const void *data, unsigned int usage)
+PandaSDL::BufferObject::BufferObject(eBufferType type, int size, const void *data, unsigned int usage)
 {
-    _target = target;
+    _target = BufferTypeToFormat[type];
     _usage = usage;
+    _type = type;
     
     glGenBuffers(1, &_id);
     Bind();
