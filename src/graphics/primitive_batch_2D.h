@@ -45,10 +45,7 @@ namespace PandaSDL
         PandaSDL::Vector2 Centre;
         unsigned int VertexCount;
         
-        virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const
-        {
-            auto b = 0;
-        }
+        virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const {}
     };
     
     struct PrimitiveRectangle2D : public PrimitiveBase2D
