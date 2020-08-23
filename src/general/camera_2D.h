@@ -33,6 +33,8 @@ namespace PandaSDL
             void OffsetPosition(float x, float y);
             void OffsetPosition(Vector2 position);
             
+            PandaSDL::Vector2 ScreenToWorldPosition(PandaSDL::Vector2 pos) const;
+            
             std::string ToString();
             
         protected:

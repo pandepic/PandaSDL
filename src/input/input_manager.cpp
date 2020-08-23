@@ -29,7 +29,7 @@ PandaSDL::InputManager::~InputManager()
     ClearAll();
 }
 
-void PandaSDL::InputManager::Update(const Timer& gameTimer)
+void PandaSDL::InputManager::Update(const Timer &gameTimer)
 {
     // KEYBOARD
     if (_keyboardState.PressedKeys.size() > 0)
@@ -104,7 +104,7 @@ void PandaSDL::InputManager::Update(const Timer& gameTimer)
     _prevMouseState = _mouseState;
 } // Update
 
-void PandaSDL::InputManager::HandleKeyUp(const SDL_KeyboardEvent& key, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleKeyUp(const SDL_KeyboardEvent& key, const Timer &gameTimer)
 {
     auto keyCode = key.keysym.sym;
     auto keyString = std::string(SDL_GetKeyName(keyCode));
@@ -114,7 +114,7 @@ void PandaSDL::InputManager::HandleKeyUp(const SDL_KeyboardEvent& key, const Tim
         _keyboardState.PressedKeys.erase(std::remove(_keyboardState.PressedKeys.begin(), _keyboardState.PressedKeys.end(), keyCode), _keyboardState.PressedKeys.end());
 }
 
-void PandaSDL::InputManager::HandleKeyDown(const SDL_KeyboardEvent& key, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleKeyDown(const SDL_KeyboardEvent& key, const Timer &gameTimer)
 {
     auto keyCode = key.keysym.sym;
     auto keyString = std::string(SDL_GetKeyName(keyCode));
@@ -124,7 +124,7 @@ void PandaSDL::InputManager::HandleKeyDown(const SDL_KeyboardEvent& key, const T
         _keyboardState.PressedKeys.push_back(keyCode);
 }
 
-void PandaSDL::InputManager::HandleMouseMotion(const SDL_MouseMotionEvent& motion, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleMouseMotion(const SDL_MouseMotionEvent& motion, const Timer &gameTimer)
 {
     _mouseState.Position.X = motion.x;
     _mouseState.Position.Y = motion.y;
@@ -132,7 +132,7 @@ void PandaSDL::InputManager::HandleMouseMotion(const SDL_MouseMotionEvent& motio
     TriggerMouseMotion(motion.xrel, motion.yrel, gameTimer);
 }
 
-void PandaSDL::InputManager::HandleMouseButtonDown(const SDL_MouseButtonEvent& button, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleMouseButtonDown(const SDL_MouseButtonEvent& button, const Timer &gameTimer)
 {
     switch (button.button)
     {
@@ -156,7 +156,7 @@ void PandaSDL::InputManager::HandleMouseButtonDown(const SDL_MouseButtonEvent& b
     }
 }
 
-void PandaSDL::InputManager::HandleMouseButtonUp(const SDL_MouseButtonEvent& button, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleMouseButtonUp(const SDL_MouseButtonEvent& button, const Timer &gameTimer)
 {
     switch (button.button)
     {
@@ -180,7 +180,7 @@ void PandaSDL::InputManager::HandleMouseButtonUp(const SDL_MouseButtonEvent& but
     }
 }
 
-void PandaSDL::InputManager::HandleMouseWheel(const SDL_MouseWheelEvent& wheel, const Timer& gameTimer)
+void PandaSDL::InputManager::HandleMouseWheel(const SDL_MouseWheelEvent& wheel, const Timer &gameTimer)
 {
     int wheelX, wheelY;
     
@@ -214,7 +214,7 @@ void PandaSDL::InputManager::HandleMouseWheel(const SDL_MouseWheelEvent& wheel, 
     }
 } // HandleMouseWheel
 
-void PandaSDL::InputManager::RegisterKeyboardHandler(HandleKeyboardInput* keyboardHandler)
+void PandaSDL::InputManager::RegisterKeyboardHandler(HandleKeyboardInput *keyboardHandler)
 {
     if (keyboardHandler == nullptr)
         return;
@@ -222,7 +222,7 @@ void PandaSDL::InputManager::RegisterKeyboardHandler(HandleKeyboardInput* keyboa
     _keyboardHandlers.push_back(keyboardHandler);
 }
 
-void PandaSDL::InputManager::RegisterMouseHandler(HandleMouseInput* mouseHandler)
+void PandaSDL::InputManager::RegisterMouseHandler(HandleMouseInput *mouseHandler)
 {
     if (mouseHandler == nullptr)
         return;
@@ -230,14 +230,14 @@ void PandaSDL::InputManager::RegisterMouseHandler(HandleMouseInput* mouseHandler
     _mouseHandlers.push_back(mouseHandler);
 }
 
-void PandaSDL::InputManager::RemoveKeyboardHandler(HandleKeyboardInput* keyboardHandler)
+void PandaSDL::InputManager::RemoveKeyboardHandler(HandleKeyboardInput *keyboardHandler)
 {
     auto find = std::find(_keyboardHandlers.begin(), _keyboardHandlers.end(), keyboardHandler);
     if (find != _keyboardHandlers.end())
        _keyboardHandlers.erase(std::remove(_keyboardHandlers.begin(), _keyboardHandlers.end(), keyboardHandler), _keyboardHandlers.end());
 }
 
-void PandaSDL::InputManager::RemoveMouseHandler(HandleMouseInput* mouseHandler)
+void PandaSDL::InputManager::RemoveMouseHandler(HandleMouseInput *mouseHandler)
 {
     auto find = std::find(_mouseHandlers.begin(), _mouseHandlers.end(), mouseHandler);
     if (find != _mouseHandlers.end())
@@ -260,7 +260,7 @@ void PandaSDL::InputManager::ClearMouseHandlers()
     _mouseHandlers.clear();
 }
 
-void PandaSDL::InputManager::TriggerKeyPressed(const SDL_Keycode &key, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerKeyPressed(const SDL_Keycode &key, const Timer &gameTimer)
 {
     auto keyString = std::string(SDL_GetKeyName(key));
     
@@ -270,7 +270,7 @@ void PandaSDL::InputManager::TriggerKeyPressed(const SDL_Keycode &key, const Tim
     }
 }
 
-void PandaSDL::InputManager::TriggerKeyReleased(const SDL_Keycode &key, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerKeyReleased(const SDL_Keycode &key, const Timer &gameTimer)
 {
     auto keyString = std::string(SDL_GetKeyName(key));
     
@@ -280,7 +280,7 @@ void PandaSDL::InputManager::TriggerKeyReleased(const SDL_Keycode &key, const Ti
     }
 }
 
-void PandaSDL::InputManager::TriggerKeyDown(const SDL_Keycode &key, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerKeyDown(const SDL_Keycode &key, const Timer &gameTimer)
 {
     auto keyString = std::string(SDL_GetKeyName(key));
     
@@ -290,7 +290,7 @@ void PandaSDL::InputManager::TriggerKeyDown(const SDL_Keycode &key, const Timer&
     }
 }
 
-void PandaSDL::InputManager::TriggerMouseButtonPressed(eMouseButton button, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerMouseButtonPressed(eMouseButton button, const Timer &gameTimer)
 {
     for (auto mouseHandler : _mouseHandlers)
     {
@@ -298,7 +298,7 @@ void PandaSDL::InputManager::TriggerMouseButtonPressed(eMouseButton button, cons
     }
 }
 
-void PandaSDL::InputManager::TriggerMouseButtonReleased(eMouseButton button, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerMouseButtonReleased(eMouseButton button, const Timer &gameTimer)
 {
     for (auto mouseHandler : _mouseHandlers)
     {
@@ -306,7 +306,7 @@ void PandaSDL::InputManager::TriggerMouseButtonReleased(eMouseButton button, con
     }
 }
 
-void PandaSDL::InputManager::TriggerMouseButtonDown(eMouseButton button, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerMouseButtonDown(eMouseButton button, const Timer &gameTimer)
 {
     for (auto mouseHandler : _mouseHandlers)
     {
@@ -314,7 +314,7 @@ void PandaSDL::InputManager::TriggerMouseButtonDown(eMouseButton button, const T
     }
 }
 
-void PandaSDL::InputManager::TriggerMouseMotion(int xMotion, int yMotion, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerMouseMotion(int xMotion, int yMotion, const Timer &gameTimer)
 {
     for (auto mouseHandler : _mouseHandlers)
     {
@@ -322,7 +322,7 @@ void PandaSDL::InputManager::TriggerMouseMotion(int xMotion, int yMotion, const 
     }
 }
 
-void PandaSDL::InputManager::TriggerMouseWheel(eMouseScrollDirection direction, const Timer& gameTimer)
+void PandaSDL::InputManager::TriggerMouseWheel(eMouseScrollDirection direction, const Timer &gameTimer)
 {
     for (auto mouseHandler : _mouseHandlers)
     {

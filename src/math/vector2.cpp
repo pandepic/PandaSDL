@@ -93,6 +93,21 @@ PandaSDL::Vector2 PandaSDL::Vector2::operator*(const double &d)
     return PandaSDL::Vector2(X * d, Y * d);
 }
 
+PandaSDL::Vector2 PandaSDL::Vector2::operator/(const int &i)
+{
+    return PandaSDL::Vector2(X / i, Y / i);
+}
+
+PandaSDL::Vector2 PandaSDL::Vector2::operator/(const float &f)
+{
+    return PandaSDL::Vector2(X / f, Y / f);
+}
+
+PandaSDL::Vector2 PandaSDL::Vector2::operator/(const double &d)
+{
+    return PandaSDL::Vector2(X / d, Y / d);
+}
+
 PandaSDL::Vector2& PandaSDL::Vector2::operator+=(const PandaSDL::Vector2 &vec)
 {
     X += vec.X;

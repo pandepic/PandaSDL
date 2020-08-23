@@ -24,7 +24,7 @@ namespace PandaSDL
             void LoadTexture(std::shared_ptr<PandaSDL::Texture2D> texture);
 
             virtual void Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, PandaSDL::Vector2 position);
-            virtual void Update(const PandaSDL::Timer& gameTimer);
+            virtual void Update(const PandaSDL::Timer &gameTimer);
 
             std::shared_ptr<PandaSDL::Texture2D> Texture;
 

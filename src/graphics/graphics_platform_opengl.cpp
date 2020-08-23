@@ -215,7 +215,7 @@ void PandaSDL::GraphicsPlatform::EnableDebugOutput()
     glDebugMessageCallback(GLErrorMessageCallback, 0);
 }
 
-void GLAPIENTRY PandaSDL::GraphicsPlatform::GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam)
+void GLAPIENTRY PandaSDL::GraphicsPlatform::GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *message, const void *userParam)
 {
     fprintf( stderr, "GL CALLBACK: %s type = 0x%x, severity = 0x%x, message = %s\n",
            ( type == GL_DEBUG_TYPE_ERROR ? "** GL ERROR **" : "" ),

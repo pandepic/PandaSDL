@@ -49,6 +49,6 @@ void PandaSDL::Sprite::Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, 
     spriteBatch->Draw(Texture, SourceRect, drawPosition, Colour, Scale, Rotation, Flip);
 }
 
-void PandaSDL::Sprite::Update(const PandaSDL::Timer& gameTimer)
+void PandaSDL::Sprite::Update(const PandaSDL::Timer &gameTimer)
 {
 }

@@ -8,7 +8,7 @@ PandaSDL::Gamestate::~Gamestate()
 {
 }
 
-void PandaSDL::Gamestate::Setup(PandaSDL::Game* game)
+void PandaSDL::Gamestate::Setup(PandaSDL::Game *game)
 {
     _game = game;
 }

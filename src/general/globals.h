@@ -48,7 +48,24 @@ namespace PandaSDL
         RIGHT,
     };
     
+    static std::map<std::string, eMouseButton> StringToMouseButtonState = 
+    {
+        { "LEFT", eMouseButton::LEFT },
+        { "Left", eMouseButton::LEFT },
+        { "MIDDLE", eMouseButton::MIDDLE },
+        { "Middle", eMouseButton::MIDDLE },
+        { "RIGHT", eMouseButton::RIGHT },
+        { "Right", eMouseButton::RIGHT }
+    };
+    
     enum class eKeyboardButtonState
+    {
+        PRESSED,
+        RELEASED,
+        DOWN,
+    };
+    
+    enum class eGameControlState
     {
         PRESSED,
         RELEASED,

@@ -76,7 +76,7 @@ void PandaSDL::AnimatedSprite::Draw(std::shared_ptr<PandaSDL::SpriteBatch> sprit
     PandaSDL::Sprite::Draw(spriteBatch, position);
 }
 
-void PandaSDL::AnimatedSprite::Update(const PandaSDL::Timer& gameTimer)
+void PandaSDL::AnimatedSprite::Update(const PandaSDL::Timer &gameTimer)
 {
     PandaSDL::Sprite::Update(gameTimer);
 

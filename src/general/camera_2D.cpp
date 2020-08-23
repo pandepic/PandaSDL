@@ -119,6 +119,12 @@ void PandaSDL::Camera2D::OffsetPosition(Vector2 position)
     CheckBoundingBox();
 }
 
+PandaSDL::Vector2 PandaSDL::Camera2D::ScreenToWorldPosition(PandaSDL::Vector2 pos) const
+{
+    auto scaledPos = pos / Zoom;
+    return scaledPos + _position;
+}
+
 void PandaSDL::Camera2D::CheckBoundingBox()
 {
     if (_boundingBox.IsEmpty())

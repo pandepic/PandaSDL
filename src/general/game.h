@@ -50,15 +50,13 @@ namespace PandaSDL
             bool GetBlendEnabled();
             
             virtual void Load() = 0;
-            virtual void Update(const PandaSDL::Timer& gameTimer) = 0;
-            virtual void Draw(const PandaSDL::Timer& gameTimer) = 0;
+            virtual void Update(const PandaSDL::Timer &gameTimer) = 0;
+            virtual void Draw(const PandaSDL::Timer &gameTimer) = 0;
             
-            void SetGamestate(PandaSDL::Gamestate* NewState);
-            void SetNextGamestate(PandaSDL::Gamestate* NewState);
+            void SetGamestate(PandaSDL::Gamestate *NewState);
+            void SetNextGamestate(PandaSDL::Gamestate *NewState);
             
             void Quit();
-
-            static void GLAPIENTRY GLErrorMessageCallback(GLenum source, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar* message, const void* userParam);
 
             static PandaSDL::Game* GameInstance;
             static PandaSDL::DynamicTextureManager DynamicTextureManager;

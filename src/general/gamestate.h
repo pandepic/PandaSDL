@@ -14,11 +14,11 @@ namespace PandaSDL
             Gamestate();
             virtual ~Gamestate();
 
-            virtual void Setup(PandaSDL::Game* game);
+            virtual void Setup(PandaSDL::Game *game);
             virtual void Close() = 0;
             
-            virtual void Update(const PandaSDL::Timer& gameTimer) = 0;
-            virtual void Draw(const PandaSDL::Timer& gameTimer) = 0;
+            virtual void Update(const PandaSDL::Timer &gameTimer) = 0;
+            virtual void Draw(const PandaSDL::Timer &gameTimer) = 0;
 
         protected:
             PandaSDL::Game* _game;
