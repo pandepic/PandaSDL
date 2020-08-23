@@ -70,8 +70,8 @@ namespace PandaSDL
             std::vector<PandaSDL::AStarPathResult> GeneratePathFromGraphPos(const PandaSDL::Vector2 &start, const PandaSDL::Vector2 &end, bool addStart = false);
             std::vector<PandaSDL::AStarPathResult> GeneratePath(AStarNode *startNode, AStarNode *endNode, bool addStart = false);
             
-            void Generate4EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight);
-            void Generate8EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight);
+            void Generate4EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, bool lazyLoad = false);
+            void Generate8EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, bool lazyLoad = false);
             
             void SetGraph(AStarNode *graph, unsigned int size);
             void SetGraph(std::vector<AStarNode> graph);
@@ -94,8 +94,9 @@ namespace PandaSDL
             bool _isGrid;
             unsigned int _gridWidth, _gridHeight;
             unsigned int _gridCellWidth, _gridCellHeight;
+            std::vector<PandaSDL::Vector2> _gridEdgeOffsets;
             
-            void GenerateGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, const std::vector<PandaSDL::Vector2> &edgeOffsets);
+            void GenerateGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, const std::vector<PandaSDL::Vector2> &edgeOffsets, bool lazyLoad = false);
             bool AddNodeToOpenList(std::vector<AStarNode*> &openList, AStarNode *node, AStarNode *parentNode, AStarNode *endNode);
             void CalculateNode(AStarNode *node);
     };

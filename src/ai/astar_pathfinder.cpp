@@ -64,7 +64,6 @@ std::vector<PandaSDL::AStarPathResult> PandaSDL::AStarPathfinder::GeneratePath(A
     
     std::vector<PandaSDL::AStarPathResult> result;
     std::vector<AStarNode*> openList;
-    std::vector<AStarNode*> closedList;
     
     bool pathFound = false;
     
@@ -84,6 +83,20 @@ std::vector<PandaSDL::AStarPathResult> PandaSDL::AStarPathfinder::GeneratePath(A
         
         if (currentNode == nullptr)
             return std::vector<PandaSDL::AStarPathResult>();
+        
+        if (currentNode->Edges.size() == 0)
+        {
+            if (_isGrid && _gridEdgeOffsets.size() > 0)
+            {
+                for (const auto &offset : _gridEdgeOffsets)
+                {
+                    auto offsetPos = PandaSDL::Vector2(currentNode->GraphPosition.X, currentNode->GraphPosition.Y) + offset;
+                    
+                    if (offsetPos.X >= 0 && offsetPos.X < _gridWidth && offsetPos.Y >= 0 && offsetPos.Y < _gridHeight)
+                        _graph[(int)(currentNode->GraphPosition.X + _gridWidth * currentNode->GraphPosition.Y)].Edges.push_back(&_graph[(int)(offsetPos.X + _gridWidth * offsetPos.Y)]);
+                }
+            }
+        }
         
         openList.pop_back();
         
@@ -161,7 +174,7 @@ bool PandaSDL::AStarPathfinder::AddNodeToOpenList(std::vector<AStarNode*> &openL
     return false;
 }
 
-void PandaSDL::AStarPathfinder::Generate4EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight)
+void PandaSDL::AStarPathfinder::Generate4EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, bool lazyLoad)
 {
     std::vector<PandaSDL::Vector2> edgeOffsets = 
     {
@@ -171,10 +184,10 @@ void PandaSDL::AStarPathfinder::Generate4EdgeGrid(unsigned int mapWidth, unsigne
         { 0, 1 }, // bottom
     };
     
-    GenerateGrid(mapWidth, mapHeight, cellWidth, cellHeight, edgeOffsets);
+    GenerateGrid(mapWidth, mapHeight, cellWidth, cellHeight, edgeOffsets, lazyLoad);
 }
 
-void PandaSDL::AStarPathfinder::Generate8EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight)
+void PandaSDL::AStarPathfinder::Generate8EdgeGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, bool lazyLoad)
 {
     std::vector<PandaSDL::Vector2> edgeOffsets = 
     {
@@ -188,10 +201,10 @@ void PandaSDL::AStarPathfinder::Generate8EdgeGrid(unsigned int mapWidth, unsigne
         { 1, 1 }, // bottom right
     };
     
-    GenerateGrid(mapWidth, mapHeight, cellWidth, cellHeight, edgeOffsets);
+    GenerateGrid(mapWidth, mapHeight, cellWidth, cellHeight, edgeOffsets, lazyLoad);
 }
 
-void PandaSDL::AStarPathfinder::GenerateGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, const std::vector<PandaSDL::Vector2> &edgeOffsets)
+void PandaSDL::AStarPathfinder::GenerateGrid(unsigned int mapWidth, unsigned int mapHeight, unsigned int cellWidth, unsigned int cellHeight, const std::vector<PandaSDL::Vector2> &edgeOffsets, bool lazyLoad)
 {
     Clear();
     
@@ -215,19 +228,26 @@ void PandaSDL::AStarPathfinder::GenerateGrid(unsigned int mapWidth, unsigned int
         }
     }
     
-    // set edges on grid based graph
-    for (int y = 0; y < mapHeight; y++)
+    if (!lazyLoad)
     {
-        for (int x = 0; x < mapWidth; x++)
+        // set edges on grid based graph
+        for (int y = 0; y < mapHeight; y++)
         {
-            for (const auto &offset : edgeOffsets)
+            for (int x = 0; x < mapWidth; x++)
             {
-                auto offsetPos = PandaSDL::Vector2(x, y) + offset;
-                
-                if (offsetPos.X >= 0 && offsetPos.X < mapWidth && offsetPos.Y >= 0 && offsetPos.Y < mapHeight)
-                    _graph[x + mapWidth * y].Edges.push_back(&_graph[(int)(offsetPos.X + mapWidth * offsetPos.Y)]);
+                for (const auto &offset : edgeOffsets)
+                {
+                    auto offsetPos = PandaSDL::Vector2(x, y) + offset;
+                    
+                    if (offsetPos.X >= 0 && offsetPos.X < mapWidth && offsetPos.Y >= 0 && offsetPos.Y < mapHeight)
+                        _graph[x + mapWidth * y].Edges.push_back(&_graph[(int)(offsetPos.X + mapWidth * offsetPos.Y)]);
+                }
             }
         }
+    }
+    else
+    {
+        _gridEdgeOffsets = edgeOffsets;
     }
     
     Reset();
