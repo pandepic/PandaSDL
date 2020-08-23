@@ -89,7 +89,7 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
     unsigned int indices[PANDASDL_QUAD_INDEX_COUNT * _maxBatchSize];
     
     // pre calculate index buffer
-    for (auto i = 0; i < _maxBatchSize; i++)
+    for (int i = 0; i < _maxBatchSize; i++)
     {
         auto startIndex = i * PANDASDL_QUAD_INDEX_COUNT;
         auto offset = i * PANDASDL_QUAD_VERTEX_COUNT;
@@ -116,7 +116,7 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
         1.0f, 1.0f, // bottom right (3)
     };
 
-    for (auto i = 0; i < PANDASDL_QUAD_VERTEX_FLOAT_COUNT; i++)
+    for (int i = 0; i < PANDASDL_QUAD_VERTEX_FLOAT_COUNT; i++)
     {
         _tempVertexBuffer[i] = vertices[i];
     }
@@ -264,7 +264,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
         model = glm::scale(model, glm::vec3(scale, 1.0f));
     }
 
-    for (auto i = 0; i < PANDASDL_QUAD_VERTEX_COUNT; i++)
+    for (int i = 0; i < PANDASDL_QUAD_VERTEX_COUNT; i++)
     {
         glm::vec2 vertPosition;
         auto startIndex = i * 2;

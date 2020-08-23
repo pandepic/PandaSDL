@@ -9,6 +9,7 @@ namespace PandaSDL
     {
         public:
             Rectangle();
+            Rectangle(const PandaSDL::Vector2 &vec, int width, int height);
             Rectangle(int x, int y, int width, int height);
             ~Rectangle();
 
@@ -22,15 +23,20 @@ namespace PandaSDL
             bool Intersects(const PandaSDL::Rectangle &rect) const;
             
             // operators
-            PandaSDL::Rectangle operator+(const PandaSDL::Rectangle &r);
-            PandaSDL::Rectangle operator-(const PandaSDL::Rectangle &r);
-            PandaSDL::Rectangle operator*(const PandaSDL::Rectangle &r);
-            PandaSDL::Rectangle operator/(const PandaSDL::Rectangle &r);
+            PandaSDL::Rectangle operator+(const PandaSDL::Rectangle &rect);
+            PandaSDL::Rectangle operator-(const PandaSDL::Rectangle &rect);
+            PandaSDL::Rectangle operator*(const PandaSDL::Rectangle &rect);
+            PandaSDL::Rectangle operator/(const PandaSDL::Rectangle &rect);
             
-            PandaSDL::Rectangle operator+(const PandaSDL::Vector2 &v);
-            PandaSDL::Rectangle operator-(const PandaSDL::Vector2 &v);
-            PandaSDL::Rectangle operator*(const PandaSDL::Vector2 &v);
-            PandaSDL::Rectangle operator/(const PandaSDL::Vector2 &v);
+            PandaSDL::Rectangle operator+(const PandaSDL::Vector2 &vec);
+            PandaSDL::Rectangle operator-(const PandaSDL::Vector2 &vec);
+            PandaSDL::Rectangle operator*(const PandaSDL::Vector2 &vec);
+            PandaSDL::Rectangle operator/(const PandaSDL::Vector2 &vec);
+            
+            bool operator==(const PandaSDL::Vector2 &vec);
+            bool operator!=(const PandaSDL::Vector2 &vec);
+            bool operator==(const PandaSDL::Rectangle &vec);
+            bool operator!=(const PandaSDL::Rectangle &vec);
 
             static PandaSDL::Rectangle Empty();
             

@@ -140,6 +140,16 @@ PandaSDL::Vector2& PandaSDL::Vector2::operator/=(const PandaSDL::Vector2 &vec)
     return *this;
 }
 
+bool PandaSDL::Vector2::operator==(const PandaSDL::Vector2 &vec)
+{
+    return (X == vec.X && Y == vec.Y);
+}
+
+bool PandaSDL::Vector2::operator!=(const PandaSDL::Vector2 &vec)
+{
+    return !(X == vec.X && Y == vec.Y);
+}
+
 PandaSDL::Vector2 PandaSDL::Vector2::Zero()
 {
     return PandaSDL::Vector2(0, 0);

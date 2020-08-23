@@ -52,8 +52,10 @@ namespace PandaSDL
             unsigned int GetMapWidth();
             unsigned int GetMapHeight();
             
-            std::vector<std::shared_ptr<TiledMapLayer>> GetLayers();
-            std::vector<std::shared_ptr<TiledMapLayer>> GetLayersByCustomProperty(std::string property, std::string value);
+            std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> GetLayers();
+            std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> GetLayersByCustomProperty(std::string property, std::string value);
+            
+            std::shared_ptr<TiledMapLayer> GetLayerByName(std::string name);
             
         protected:
             unsigned int _tileWidth, _tileHeight;

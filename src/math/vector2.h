@@ -38,6 +38,9 @@ namespace PandaSDL
             PandaSDL::Vector2& operator-=(const PandaSDL::Vector2 &vec);
             PandaSDL::Vector2& operator*=(const PandaSDL::Vector2 &vec);
             PandaSDL::Vector2& operator/=(const PandaSDL::Vector2 &vec);
+            
+            bool operator==(const PandaSDL::Vector2 &vec);
+            bool operator!=(const PandaSDL::Vector2 &vec);
 
             static PandaSDL::Vector2 Zero();
             static double Distance(const PandaSDL::Vector2 &vec1, const PandaSDL::Vector2 &vec2);

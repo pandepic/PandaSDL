@@ -60,7 +60,7 @@ void PandaSDL::PrimitiveRectangle2D::AddBatchVertices(std::vector<PrimitiveBatch
         model = glm::scale(model, glm::vec3(scale, 1.0f));
     }
     
-    for (auto i = 0; i < 6; i++)
+    for (int i = 0; i < 6; i++)
     {
         glm::vec2 vertPosition;
         auto startIndex = i * 2;
@@ -234,7 +234,7 @@ void PandaSDL::PrimitiveBatch2D::End()
 
 void PandaSDL::PrimitiveBatch2D::Clear()
 {
-    for (auto i = 0; i < _currentBatch.size(); i++)
+    for (int i = 0; i < _currentBatch.size(); i++)
         delete _currentBatch[i];
     
     _currentBatch.clear();

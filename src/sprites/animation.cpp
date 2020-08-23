@@ -20,7 +20,7 @@ void PandaSDL::Animation::FrameSetRange(int min, int max)
 
 void PandaSDL::Animation::FrameAddRange(int min, int max)
 {
-    for (auto i = min; i <= max; i++)
+    for (int i = min; i <= max; i++)
     {
         Frames.push_back(i);
     }

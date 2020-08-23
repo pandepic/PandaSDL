@@ -180,3 +180,14 @@ std::vector<std::shared_ptr<PandaSDL::TiledMapLayer>> PandaSDL::TiledMap::GetLay
     
     return layers;
 }
+
+std::shared_ptr<PandaSDL::TiledMapLayer> PandaSDL::TiledMap::GetLayerByName(std::string name)
+{
+    for (const auto &layer : _layers)
+    {
+        if (layer->Name == name)
+            return layer;
+    }
+    
+    return nullptr;
+}

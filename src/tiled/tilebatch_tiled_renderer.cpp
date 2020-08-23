@@ -49,9 +49,9 @@ void PandaSDL::TilebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, bo
 
 void PandaSDL::TilebatchTiledRenderer::BuildTilebatchLayer(const std::shared_ptr<PandaSDL::TiledMapLayer> &layer, bool below)
 {
-    for (auto y = 0; y < _mapHeight; y++)
+    for (int y = 0; y < _mapHeight; y++)
     {
-        for (auto x = 0; x < _mapWidth; x++)
+        for (int x = 0; x < _mapWidth; x++)
         {
             auto tileID = layer->Tiles[x + _mapWidth * y];
             

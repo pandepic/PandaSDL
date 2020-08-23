@@ -52,12 +52,12 @@ void PandaSDL::SpritebatchTiledRenderer::Draw(const PandaSDL::Camera2D &camera, 
     {
         PandaSDL::Vector2 tilePos;
         
-        for (auto y = loopY; y < loopHeight; y++)
+        for (int y = loopY; y < loopHeight; y++)
         {
             if (y >= _mapHeight || y < 0)
                 continue;
             
-            for (auto x = loopX; x < loopWidth; x++)
+            for (int x = loopX; x < loopWidth; x++)
             {
                 if (x >= _mapWidth || x < 0)
                     continue;
