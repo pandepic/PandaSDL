@@ -119,6 +119,20 @@ void PandaSDL::PrimitiveRectangle2D::AddBatchVertices(std::vector<PrimitiveBatch
     }
 }
 
+void PandaSDL::PrimitiveCircle2D::AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const
+{
+    auto color = Color.ToGLMVec4();
+    auto numVertices = VertexCount;
+    
+    for(double i = 0; i < 2 * M_PI; i += 2 * M_PI / numVertices){
+        PrimitiveBatchVertex vertex;
+        vertex.Position = { cos(i) * Radius + Position.X, sin(i) * Radius + Position.Y };
+        vertex.Colour = color;
+        
+        batchVertices.push_back(vertex);
+    }
+}
+
 PandaSDL::PrimitiveBatch2D::PrimitiveBatch2D()
     : _initialised(false), _begin(false), _batchSize(0)
 {
@@ -211,6 +225,39 @@ void PandaSDL::PrimitiveBatch2D::DrawEmptyRectangle(PandaSDL::Rectangle rect, Pa
     DrawFilledRectangle(PandaSDL::Rectangle(rect.X + (rect.Width - lineSize), rect.Y + lineSize, lineSize, (rect.Height - lineSize * 2)), color, centre, rotation);
 }
 
+void PandaSDL::PrimitiveBatch2D::DrawEmptyCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality)
+{
+    if (!_begin)
+        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::PRIMITIVEBATCH_DRAW, "Begin must be called before DrawFilledCircle.");
+    
+    auto qualityFactor = quality == eCircleQuality::HIGH ? 10 : 20;
+    
+    auto newItem = new PrimitiveCircle2D(position, radius, color);
+    newItem->Centre = position;
+    newItem->DrawMode = GL_LINE_LOOP;
+    newItem->VertexCount = 16;
+    newItem->Filled = false;
+    newItem->VertexCount = (int)(radius / qualityFactor) * 8;
+    
+    _currentBatch.push_back(newItem);
+}
+
+void PandaSDL::PrimitiveBatch2D::DrawFilledCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality)
+{
+    if (!_begin)
+        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::PRIMITIVEBATCH_DRAW, "Begin must be called before DrawFilledCircle.");
+    
+    auto qualityFactor = quality == eCircleQuality::HIGH ? 10 : 20;
+    
+    auto newItem = new PrimitiveCircle2D(position, radius, color);
+    newItem->Centre = position;
+    newItem->VertexCount = 16;
+    newItem->Filled = true;
+    newItem->VertexCount = (int)(radius / qualityFactor) * 8;
+    
+    _currentBatch.push_back(newItem);
+}
+
 void PandaSDL::PrimitiveBatch2D::End()
 {
     if (!_begin)
@@ -219,16 +266,31 @@ void PandaSDL::PrimitiveBatch2D::End()
     _primitiveShader->Use();
     _primitiveShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
     
+    unsigned int currentDrawMode = -1;
+    
     for (const auto &batchItem : _currentBatch)
     {
+        if (currentDrawMode == -1)
+        {
+            currentDrawMode = batchItem->DrawMode;
+        }
+        else
+        {
+            if (currentDrawMode != batchItem->DrawMode)
+            {
+                Flush(currentDrawMode);
+                currentDrawMode = batchItem->DrawMode;
+            }
+        }
+        
         if (_batchVertices.size() + batchItem->VertexCount >= _maxBatchSize)
-            Flush();
+            Flush(currentDrawMode);
         
         batchItem->AddBatchVertices(_batchVertices);
         _batchSize += 1;
     }
     
-    Flush();
+    Flush(currentDrawMode);
     Clear();
 }
 
@@ -243,15 +305,17 @@ void PandaSDL::PrimitiveBatch2D::Clear()
     _batchSize = 0;
 }
 
-void PandaSDL::PrimitiveBatch2D::Flush()
+void PandaSDL::PrimitiveBatch2D::Flush(unsigned int drawMode)
 {
     if (_batchVertices.size() <= 0)
+        return;
+    if (drawMode == -1)
         return;
     
     _vao->Bind(true);
     
     _vbo->BufferSubData(0, sizeof(PrimitiveBatchVertex) * _batchVertices.size(), &_batchVertices[0]);
-    _vbo->DrawArrays(0, _batchVertices.size());
+    _vbo->DrawArrays(0, _batchVertices.size(), drawMode);
     
     _vao->Unbind(true);
 

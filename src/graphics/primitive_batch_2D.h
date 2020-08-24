@@ -20,6 +20,13 @@ namespace PandaSDL
     enum class ePrimitive2DType
     {
         RECTANGLE,
+        CIRCLE
+    };
+    
+    enum class eCircleQuality
+    {
+        HIGH,
+        LOW
     };
     
     #pragma pack(push, 0)
@@ -36,7 +43,8 @@ namespace PandaSDL
     
     struct PrimitiveBase2D
     {
-        PrimitiveBase2D(ePrimitive2DType type, PandaSDL::Vector2 position, PandaSDL::Color color) : Type(type), Color(color), Position(position) {}
+        PrimitiveBase2D(ePrimitive2DType type, PandaSDL::Vector2 position, PandaSDL::Color color, unsigned int drawMode)
+        : Type(type), Color(color), Position(position), Centre(position), VertexCount(0), DrawMode(drawMode) {}
         
         ePrimitive2DType Type;
         PandaSDL::Color Color;
@@ -44,6 +52,7 @@ namespace PandaSDL
         float Rotation;
         PandaSDL::Vector2 Centre;
         unsigned int VertexCount;
+        unsigned int DrawMode;
         
         virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const {}
     };
@@ -60,9 +69,21 @@ namespace PandaSDL
             RECTVERT_TOPRIGHT2,
         };
         
-        PrimitiveRectangle2D(PandaSDL::Rectangle rect, PandaSDL::Color color) : PrimitiveBase2D(ePrimitive2DType::RECTANGLE, { rect.X, rect.Y }, color), Rect(rect) {}
+        PrimitiveRectangle2D(PandaSDL::Rectangle rect, PandaSDL::Color color)
+        : PrimitiveBase2D(ePrimitive2DType::RECTANGLE, { rect.X, rect.Y }, color, GL_TRIANGLES), Rect(rect) {}
         
         PandaSDL::Rectangle Rect;
+        
+        virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const override;
+    };
+    
+    struct PrimitiveCircle2D : public PrimitiveBase2D
+    {
+        PrimitiveCircle2D(PandaSDL::Vector2 position, float radius, PandaSDL::Color color)
+        : PrimitiveBase2D(ePrimitive2DType::CIRCLE, position, color, GL_TRIANGLE_FAN), Filled(false), Radius(radius) {}
+        
+        bool Filled;
+        float Radius;
         
         virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const override;
     };
@@ -81,10 +102,15 @@ namespace PandaSDL
                 unsigned int                maxBatchSize =      PANDASDL_DEFAULT_PRIMITIVEBATCH_SIZE);
             
             void Begin(glm::mat4 transform = _defaultTransform);
+            
             void DrawRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation = 0.0f, bool outline = false, unsigned int outlineSize = 1, PandaSDL::Color outlineColor = PANDASDL_COLOR_WHITE);
             void DrawFilledRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, float rotation = 0.0f);
             void DrawFilledRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, PandaSDL::Vector2 centre, float rotation = 0.0f);
             void DrawEmptyRectangle(PandaSDL::Rectangle rect, PandaSDL::Color color, unsigned int lineSize, float rotation = 0.0f);
+            
+            void DrawEmptyCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality = eCircleQuality::HIGH);
+            void DrawFilledCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality = eCircleQuality::HIGH);
+            
             void End();
             void Clear();
             
@@ -109,7 +135,7 @@ namespace PandaSDL
             std::vector<PrimitiveBatchVertex> _batchVertices;
             unsigned int _batchSize;
             
-            void Flush();
+            void Flush(unsigned int drawMode);
             void CheckDefaultShaders();
     };
 }
