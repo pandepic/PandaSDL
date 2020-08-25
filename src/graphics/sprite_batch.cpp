@@ -24,13 +24,13 @@ std::string PandaSDL::SpriteBatch::DefaultSpriteShaderFragmentCode =
 "in vec2 fTexCoords;\n"
 "in vec4 fColour;\n"
 
-"out vec4 color;\n"
+"out vec4 fFragColour;\n"
 
 "uniform sampler2D image;\n" // todo : texture array?
 
 "void main()\n"
 "{\n"
-"    color = texture(image, fTexCoords) * fColour;\n"
+"    fFragColour = texture(image, fTexCoords) * fColour;\n"
 "}\n";
 
 std::shared_ptr<PandaSDL::Shader> PandaSDL::SpriteBatch::DefaultFontShader = nullptr;

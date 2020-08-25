@@ -40,6 +40,8 @@ std::string PandaSDL::TileBatch::DefaultTileShaderFragmentCode =
 "uniform vec2 tileSize;\n"
 //"uniform uint animationTimer;\n" todo : global timer or timer array?
 
+"out vec4 fFragColour;\n"
+
 "void main()\n"
 "{\n"
 "   if(texCoord.x < 0 || texCoord.y < 0 || texCoord.x > 1 || texCoord.y > 1) { discard; }\n" // discard if outside data texture/outside tilemap
@@ -50,7 +52,7 @@ std::string PandaSDL::TileBatch::DefaultTileShaderFragmentCode =
 "   vec2 spriteOffset = floor(tile.xy * 256.0) * tileSize;\n" // todo : add tile animation frame offset here
 "   vec2 spriteCoord = mod(pixelCoord, tileSize);\n"
 
-"   gl_FragColor = texture2D(atlasImage, (spriteOffset + spriteCoord) * inverseSpriteTextureSize);\n"
+"   fFragColour = texture2D(atlasImage, (spriteOffset + spriteCoord) * inverseSpriteTextureSize);\n"
 "}\n";
 
 PandaSDL::TileBatch::TileBatch()

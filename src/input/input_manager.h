@@ -63,10 +63,10 @@ namespace PandaSDL
             void HandleMouseButtonUp(const SDL_MouseButtonEvent& button, const Timer &gameTimer);
             void HandleMouseWheel(const SDL_MouseWheelEvent& wheel, const Timer &gameTimer);
             
-            void RegisterKeyboardHandler(HandleKeyboardInput* keyboardHandler);
-            void RegisterMouseHandler(HandleMouseInput* mouseHandler);
-            void RemoveKeyboardHandler(HandleKeyboardInput* keyboardHandler);
-            void RemoveMouseHandler(HandleMouseInput* mouseHandler);
+            void RegisterKeyboardHandler(HandleKeyboardInput *keyboardHandler);
+            void RegisterMouseHandler(HandleMouseInput *mouseHandler);
+            void RemoveKeyboardHandler(HandleKeyboardInput *keyboardHandler);
+            void RemoveMouseHandler(HandleMouseInput *mouseHandler);
             
             void ClearAll();
             void ClearKeyboardHandlers();

@@ -20,11 +20,11 @@ std::string PandaSDL::PrimitiveBatch2D::DefaultPrimitiveShaderFragmentCode =
 "#version 330 core\n"
 "in vec4 fColour;\n"
 
-"out vec4 color;\n"
+"out vec4 fFragColour;\n"
 
 "void main()\n"
 "{\n"
-"    color = fColour;\n"
+"    fFragColour = fColour;\n"
 "}\n";
 
 bool PandaSDL::PrimitiveBatch2D::DefaultShadersInitialised = false;
