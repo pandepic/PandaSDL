@@ -112,6 +112,31 @@ bool PandaSDL::Rectangle::Intersects(const PandaSDL::Rectangle &rect) const
     return (rect.X < (X + Width) && X < (rect.X + rect.Width) && rect.Y < (Y + Height) && Y < (rect.Y + rect.Height));
 }
 
+bool PandaSDL::Rectangle::CircleIntersects(const PandaSDL::Vector2 &circlePosition, int radius) const
+{
+    float halfRectWidth = Width / 2.0f;
+    float halfRectHeight = Height / 2.0f;
+    
+    float distX = abs(circlePosition.X - (X + halfRectWidth));
+    float distY = abs(circlePosition.Y - (Y + halfRectHeight));
+    
+    if (distX >= radius + halfRectWidth || distY >= radius + halfRectHeight) {
+        return false;
+    }
+    if (distX < halfRectWidth || distY < halfRectHeight) {
+        return true;
+    }
+    
+    distX -= halfRectWidth;
+    distY -= halfRectHeight;
+    
+    if (distX * distX + distY * distY < radius * radius) {
+        return true;
+    }
+    
+    return false;
+}
+
 PandaSDL::Rectangle PandaSDL::Rectangle::Intersects(const PandaSDL::Rectangle &rect1, const PandaSDL::Rectangle &rect2)
 {
     if (!rect1.Intersects(rect2))
