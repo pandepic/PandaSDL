@@ -56,7 +56,7 @@ void PandaSDL::CollisionManager::Draw(std::shared_ptr<PrimitiveBatch2D> primitiv
     }
 }
 
-void PandaSDL::CollisionManager::RegisterEntity(Entity2D *entity)
+void PandaSDL::CollisionManager::RegisterEntity(std::shared_ptr<Entity2D> entity)
 {
     if (entity == nullptr)
         return;
@@ -64,7 +64,7 @@ void PandaSDL::CollisionManager::RegisterEntity(Entity2D *entity)
     _entities.push_back(entity);
 }
 
-void PandaSDL::CollisionManager::RemoveEntity(Entity2D *entity)
+void PandaSDL::CollisionManager::RemoveEntity(std::shared_ptr<Entity2D> entity)
 {
     auto find = std::find(_entities.begin(), _entities.end(), entity);
     if (find != _entities.end())

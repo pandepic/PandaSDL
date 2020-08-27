@@ -88,10 +88,12 @@ std::vector<PandaSDL::AStarPathResult> PandaSDL::AStarPathfinder::GeneratePath(A
         {
             if (_isGrid && _gridEdgeOffsets.size() > 0)
             {
+                // lazy loading grid edges
                 for (const auto &offset : _gridEdgeOffsets)
                 {
                     auto offsetPos = PandaSDL::Vector2(currentNode->GraphPosition.X, currentNode->GraphPosition.Y) + offset;
                     
+                    // add node edge if the edge is inside the grid bounds
                     if (offsetPos.X >= 0 && offsetPos.X < _gridWidth && offsetPos.Y >= 0 && offsetPos.Y < _gridHeight)
                         _graph[(int)(currentNode->GraphPosition.X + _gridWidth * currentNode->GraphPosition.Y)].Edges.push_back(&_graph[(int)(offsetPos.X + _gridWidth * offsetPos.Y)]);
                 }

@@ -18,11 +18,11 @@ namespace PandaSDL
             void Update(const Timer &gameTimer);
             void Draw(std::shared_ptr<PrimitiveBatch2D> primitiveBatch, Color color);
             
-            void RegisterEntity(Entity2D *entity);
-            void RemoveEntity(Entity2D *entity);
+            void RegisterEntity(std::shared_ptr<Entity2D> entity);
+            void RemoveEntity(std::shared_ptr<Entity2D> entity);
             
         protected:
-            std::vector<Entity2D*> _entities;
+            std::vector<std::shared_ptr<Entity2D>> _entities;
     };
 }
 
