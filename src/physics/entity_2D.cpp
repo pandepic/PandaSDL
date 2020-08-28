@@ -1,7 +1,7 @@
 #include "entity_2D.h"
 
 PandaSDL::Entity2D::Entity2D()
-    : Width(0), Height(0)
+    : Width(0), Height(0), CanMove(false)
 {
 }
 

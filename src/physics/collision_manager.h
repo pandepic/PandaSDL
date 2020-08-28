@@ -16,7 +16,7 @@ namespace PandaSDL
             ~CollisionManager();
             
             void Update(const Timer &gameTimer);
-            void Draw(std::shared_ptr<PrimitiveBatch2D> primitiveBatch, Color color);
+            void Draw(std::shared_ptr<PrimitiveBatch2D> primitiveBatch, Color color, bool canMove = false);
             
             void RegisterEntity(std::shared_ptr<Entity2D> entity);
             void RemoveEntity(std::shared_ptr<Entity2D> entity);

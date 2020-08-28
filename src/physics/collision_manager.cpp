@@ -16,7 +16,9 @@ void PandaSDL::CollisionManager::Update(const Timer &gameTimer)
     
     for (auto &entity : _entities)
     {
-        // todo : find a way to more efficiently group moving and static entities to avoid this check
+        // todo : find a way to more efficiently group moving and static entities to avoid these checks
+        if (!entity->CanMove)
+            continue;
         if (entity->Velocity.IsZero())
             continue;
         
@@ -45,10 +47,13 @@ void PandaSDL::CollisionManager::Update(const Timer &gameTimer)
     }
 }
 
-void PandaSDL::CollisionManager::Draw(std::shared_ptr<PrimitiveBatch2D> primitiveBatch, Color color)
+void PandaSDL::CollisionManager::Draw(std::shared_ptr<PrimitiveBatch2D> primitiveBatch, Color color, bool canMove)
 {
     for (auto &entity : _entities)
     {
+        if (!entity->CanMove == canMove)
+            continue;
+        
         for (auto &shape : entity->CollisionShapes)
         {
             shape->Draw(primitiveBatch, color);

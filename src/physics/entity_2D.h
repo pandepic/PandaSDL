@@ -22,6 +22,7 @@ namespace PandaSDL
             unsigned int Width, Height;
             PandaSDL::Vector2 Position, Velocity;
             std::vector<std::shared_ptr<PandaSDL::CollisionShape>> CollisionShapes;
+            bool CanMove;
             
             void Update(const Timer &gameTimer);
             
