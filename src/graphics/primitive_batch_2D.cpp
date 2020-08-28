@@ -258,6 +258,51 @@ void PandaSDL::PrimitiveBatch2D::DrawFilledCircle(PandaSDL::Vector2 position, fl
     _currentBatch.push_back(newItem);
 }
 
+PandaSDL::PremadePrimitiveBatch2D PandaSDL::PrimitiveBatch2D::EndPremadeBatch()
+{
+    if (!_begin)
+        PandaSDL::ThrowException(PandaSDL::ePandaSDLException::PRIMITIVEBATCH_BEGIN, "Begin must be called before EndPremadeBatch.");
+    
+    PremadePrimitiveBatch2D premadeBatch;
+    
+    unsigned int currentDrawMode = -1;
+    unsigned int drawPassCount = 0;
+    premadeBatch.DrawPasses.push_back(PremadePrimitiveBatch2DDrawPass());
+    
+    for (const auto &batchItem : _currentBatch)
+    {
+        if (currentDrawMode == -1)
+        {
+            currentDrawMode = batchItem->DrawMode;
+            premadeBatch.DrawPasses[drawPassCount].DrawMode = currentDrawMode;
+        }
+        else
+        {
+            if (currentDrawMode != batchItem->DrawMode)
+            {
+                premadeBatch.DrawPasses.push_back(PremadePrimitiveBatch2DDrawPass());
+                drawPassCount += 1;
+                premadeBatch.DrawPasses[drawPassCount].DrawMode = currentDrawMode;
+                currentDrawMode = batchItem->DrawMode;
+            }
+        }
+        
+        if (premadeBatch.DrawPasses[drawPassCount].Vertices.size() + batchItem->VertexCount >= _maxBatchSize)
+        {
+            premadeBatch.DrawPasses.push_back(PremadePrimitiveBatch2DDrawPass());
+            premadeBatch.DrawPasses[drawPassCount].DrawMode = currentDrawMode;
+            drawPassCount += 1;
+        }
+        
+        batchItem->AddBatchVertices(premadeBatch.DrawPasses[drawPassCount].Vertices);
+        premadeBatch.BatchSize += 1;
+    }
+    
+    Clear();
+    
+    return premadeBatch;
+}
+
 void PandaSDL::PrimitiveBatch2D::End()
 {
     if (!_begin)
@@ -303,6 +348,24 @@ void PandaSDL::PrimitiveBatch2D::Clear()
     _batchVertices.clear();
     _begin = false;
     _batchSize = 0;
+}
+
+void PandaSDL::PrimitiveBatch2D::DrawPremadeBatch(PremadePrimitiveBatch2D &batch, glm::mat4 transform)
+{
+    _primitiveShader->Use();
+    _primitiveShader->SetMatrix4("mProjectionView", _projection * _currentBatchTransform);
+    
+    for (const auto &pass : batch.DrawPasses)
+    {
+        for (const auto &vertex : pass.Vertices)
+        {
+            _batchVertices.push_back(vertex);
+        }
+        
+        Flush(pass.DrawMode);
+    }
+    
+    Clear();
 }
 
 void PandaSDL::PrimitiveBatch2D::Flush(unsigned int drawMode)

@@ -88,6 +88,18 @@ namespace PandaSDL
         virtual void AddBatchVertices(std::vector<PrimitiveBatchVertex> &batchVertices) const override;
     };
     
+    struct PremadePrimitiveBatch2DDrawPass
+    {
+        std::vector<PrimitiveBatchVertex> Vertices;
+        unsigned int DrawMode;
+    };
+    
+    struct PremadePrimitiveBatch2D
+    {
+        std::vector<PremadePrimitiveBatch2DDrawPass> DrawPasses;
+        unsigned int BatchSize;
+    };
+    
     class PrimitiveBatch2D
     {
         public:
@@ -111,6 +123,8 @@ namespace PandaSDL
             void DrawEmptyCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality = eCircleQuality::HIGH);
             void DrawFilledCircle(PandaSDL::Vector2 position, float radius, PandaSDL::Color color, eCircleQuality quality = eCircleQuality::HIGH);
             
+            PandaSDL::PremadePrimitiveBatch2D EndPremadeBatch();
+            void DrawPremadeBatch(PremadePrimitiveBatch2D &batch, glm::mat4 transform = _defaultTransform);
             void End();
             void Clear();
             
