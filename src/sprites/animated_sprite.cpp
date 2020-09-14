@@ -15,8 +15,14 @@ void PandaSDL::AnimatedSprite::Init(std::shared_ptr<PandaSDL::Texture2D> texture
 
     FrameWidth = frameWidth;
     FrameHeight = frameHeight;
+    
+    if (frameWidth == -1 && frameHeight == -1)
+    {
+        FrameWidth = texture->GetWidth();
+        FrameHeight = texture->GetHeight();
+    }
 
-    Center = PandaSDL::Vector2::Zero();
+    Origin = PandaSDL::Vector2::Zero();
 
     TotalFrames = (Texture->GetWidth() / FrameWidth) * (Texture->GetHeight() / FrameHeight);
 

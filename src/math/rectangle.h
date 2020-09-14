@@ -21,7 +21,7 @@ namespace PandaSDL
             bool Contains(const PandaSDL::Vector2 &vec) const;
             bool Contains(const PandaSDL::Rectangle &rect) const;
             bool Intersects(const PandaSDL::Rectangle &rect) const;
-            bool CircleIntersects(const PandaSDL::Vector2 &circlePosition, int radius) const;
+            bool CircleIntersects(const PandaSDL::Vector2 &circlePosition, const int &radius) const;
             
             // operators
             PandaSDL::Rectangle operator+(const PandaSDL::Rectangle &rect);

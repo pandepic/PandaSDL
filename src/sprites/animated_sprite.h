@@ -14,7 +14,7 @@ namespace PandaSDL
             AnimatedSprite();
             ~AnimatedSprite();
 
-            void Init(std::shared_ptr<PandaSDL::Texture2D> texture, int frameWidth, int frameHeight, int defaultFrame = 1);
+            void Init(std::shared_ptr<PandaSDL::Texture2D> texture, int frameWidth = -1, int frameHeight = -1, int defaultFrame = 1);
             void PlayAnimation(std::shared_ptr<PandaSDL::Animation> animation, int loopCount = PANDASDL_LOOPFOREVER);
             void StopAnimation();
             void SetFrame(int frame);

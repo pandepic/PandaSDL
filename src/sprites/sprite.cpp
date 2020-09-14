@@ -32,7 +32,7 @@ void PandaSDL::Sprite::LoadTexture(std::shared_ptr<PandaSDL::Texture2D> texture)
     
     Texture = texture;
     
-    Center = PandaSDL::Vector2((int)Texture->GetWidth() / 2, (int)Texture->GetHeight() / 2);
+    Origin = PandaSDL::Vector2((int)Texture->GetWidth() / 2, (int)Texture->GetHeight() / 2);
     SourceRect = PandaSDL::Rectangle(0, 0, Texture->GetWidth(), Texture->GetHeight());
 }
 
@@ -46,7 +46,7 @@ void PandaSDL::Sprite::Draw(std::shared_ptr<PandaSDL::SpriteBatch> spriteBatch, 
     
     PandaSDL::Vector2 drawPosition = PandaSDL::Vector2((int)position.X, (int)position.Y);
 
-    spriteBatch->Draw(Texture, SourceRect, drawPosition, Colour, Scale, Rotation, Flip);
+    spriteBatch->Draw(Texture, SourceRect, drawPosition, Colour, Scale, Rotation, Flip, Origin);
 }
 
 void PandaSDL::Sprite::Update(const PandaSDL::Timer &gameTimer)

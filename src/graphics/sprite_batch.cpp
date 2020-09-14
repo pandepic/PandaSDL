@@ -135,12 +135,27 @@ void PandaSDL::SpriteBatch::Begin(glm::mat4 transform)
     _begin = true;
 }
 
-void PandaSDL::SpriteBatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::Draw(
+    std::shared_ptr<PandaSDL::Texture2D> texture,
+    PandaSDL::Vector2 position,
+    PandaSDL::Color color,
+    Vector2 scale,
+    float rotation,
+    eSpriteFlip flip,
+    Vector2 origin)
 {
-    Draw(texture, PandaSDL::Rectangle::Empty(), position, color, scale, rotation, flip);
+    Draw(texture, PandaSDL::Rectangle::Empty(), position, color, scale, rotation, flip, origin);
 }
 
-void PandaSDL::SpriteBatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, PandaSDL::Rectangle sourceRect, PandaSDL::Vector2 position, PandaSDL::Color color, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::Draw(
+    std::shared_ptr<PandaSDL::Texture2D> texture,
+    PandaSDL::Rectangle sourceRect,
+    PandaSDL::Vector2 position,
+    PandaSDL::Color color,
+    Vector2 scale,
+    float rotation,
+    eSpriteFlip flip,
+    Vector2 origin)
 {
     if (!_begin)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before Draw.");
@@ -171,11 +186,12 @@ void PandaSDL::SpriteBatch::Draw(std::shared_ptr<PandaSDL::Texture2D> texture, P
     batchItem.Scale = scale;
     batchItem.Rotation = rotation;
     batchItem.Flip = flip;
+    batchItem.Origin = origin;
 
     _currentBatch.push_back(batchItem);
 }
 
-void PandaSDL::SpriteBatch::DrawText(std::shared_ptr<SpriteFont> font, std::string text, unsigned int size, Vector2 position, Color color, bool alignPosition, Vector2 scale, float rotation, eSpriteFlip flip)
+void PandaSDL::SpriteBatch::DrawText(std::shared_ptr<SpriteFont> font, std::string text, unsigned int size, Vector2 position, Color color, bool alignPosition, Vector2 scale, float rotation, eSpriteFlip flip, Vector2 origin)
 {
     if (!_begin)
         PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEBATCH_BEGIN, "Begin must be called before DrawText.");
@@ -200,6 +216,7 @@ void PandaSDL::SpriteBatch::DrawText(std::shared_ptr<SpriteFont> font, std::stri
             batchItem.Scale = scale;
             batchItem.Rotation = rotation;
             batchItem.Flip = flip;
+            batchItem.Origin = origin;
             
             auto offsetX = charData->Bearing.X * scale.X;
             auto offsetY = (size - charData->Bearing.Y) * scale.Y;
@@ -243,6 +260,7 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
     auto position = item.Position;
     auto color = item.Color.ToGLMVec4();
     auto rotation = item.Rotation;
+    auto origin = item.Origin;
 
     auto texelWidth = texture->GetTexelWidth();
     auto texelHeight = texture->GetTexelHeight();
@@ -250,18 +268,17 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
     glm::vec2 scale;
     scale.x = item.Scale.X * source.Width;
     scale.y = item.Scale.Y * source.Height;
-
-    glm::mat4 model = glm::mat4(1.0f);
-
-    // temporary slow rotation
-    // todo : optimise this to use a mat3x2 or do rotation math directly?
+    
+    auto sin = 0.0f;
+    auto cos = 0.0f;
+    auto nOriginX = -origin.X;
+    auto nOriginY = -origin.Y;
+    
     if (rotation != 0.0f)
     {
-        model = glm::translate(model, glm::vec3(position.X, position.Y, 1.0f));
-        model = glm::translate(model, glm::vec3(0.5f * scale.x, 0.5f * scale.y, 0.0f));
-        model = glm::rotate(model, glm::radians(rotation), glm::vec3(0.0f, 0.0f, 1.0f));
-        model = glm::translate(model, glm::vec3(-0.5f * scale.x, -0.5f * scale.y, 0.0f));
-        model = glm::scale(model, glm::vec3(scale, 1.0f));
+        auto radians = glm::radians(rotation);
+        sin = std::sin(radians);
+        cos = std::cos(radians);
     }
 
     for (int i = 0; i < PANDASDL_QUAD_VERTEX_COUNT; i++)
@@ -271,6 +288,9 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
 
         auto x = _tempVertexBuffer[startIndex];
         auto y = _tempVertexBuffer[startIndex + 1];
+        
+        auto w = (scale.x * x);
+        auto h = (scale.y * y);
 
         glm::vec2 uv;
 
@@ -286,8 +306,16 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
             else
                 uv.y = source.Y * texelHeight;
 
-            vertPosition.x = position.X;
-            vertPosition.y = position.Y;
+            if (rotation == 0.0f)
+            {
+                vertPosition.x = (position.X - origin.X);
+                vertPosition.y = (position.Y - origin.Y);
+            }
+            else
+            {
+                vertPosition.x = position.X + nOriginX * cos - nOriginY * sin;
+                vertPosition.y = position.Y + nOriginX * sin + nOriginY * cos;
+            }
         }
         else if (i == (int)QuadVertexIndex::TOP_RIGHT)
         {
@@ -300,9 +328,17 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
                 uv.y = (source.Y + source.Height) * texelHeight;
             else
                 uv.y = source.Y * texelHeight;
-
-            vertPosition.x = position.X + (scale.x * x);
-            vertPosition.y = position.Y;
+            
+            if (rotation == 0.0f)
+            {
+                vertPosition.x = (position.X - origin.X) + w;
+                vertPosition.y = (position.Y - origin.Y);
+            }
+            else
+            {
+                vertPosition.x = position.X + (nOriginX + w) * cos - nOriginY * sin;
+                vertPosition.y = position.Y + (nOriginX + w) * sin + nOriginY * cos;
+            }
         }
         else if (i == (int)QuadVertexIndex::BOTTOM_LEFT)
         {
@@ -315,9 +351,17 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
                 uv.y = source.Y * texelHeight;
             else
                 uv.y = (source.Y + source.Height) * texelHeight;
-
-            vertPosition.x = position.X;
-            vertPosition.y = position.Y + (scale.y * y);
+            
+            if (rotation == 0.0f)
+            {
+                vertPosition.x = (position.X - origin.X);
+                vertPosition.y = (position.Y - origin.Y) + h;
+            }
+            else
+            {
+                vertPosition.x = position.X + nOriginX * cos - (nOriginY + h) * sin;
+                vertPosition.y = position.Y + nOriginX * sin + (nOriginY + h) * cos;
+            }
         }
         else if (i == (int)QuadVertexIndex::BOTTOM_RIGHT)
         {
@@ -330,19 +374,17 @@ void PandaSDL::SpriteBatch::AddQuadVertices(const SpriteBatchItem &item)
                 uv.y = source.Y * texelHeight;
             else
                 uv.y = (source.Y + source.Height) * texelHeight;
-
-            vertPosition.x = position.X + (scale.x * x);
-            vertPosition.y = position.Y + (scale.y * y);
-        }
-
-        // temporary slow rotation
-        // todo : optimise this to use a mat3x2 or do rotation math directly?
-        if (rotation != 0.0f)
-        {
-            auto transformVec = glm::vec4(x, y, 0, 1);
-            transformVec = model * transformVec;
-            vertPosition.x = transformVec.x;
-            vertPosition.y = transformVec.y;
+            
+            if (rotation == 0.0f)
+            {
+                vertPosition.x = (position.X - origin.X) + w;
+                vertPosition.y = (position.Y - origin.Y) + h;
+            }
+            else
+            {
+                vertPosition.x = position.X + (nOriginX + w) * cos - (nOriginY + h) * sin;
+                vertPosition.y = position.Y + (nOriginX + w) * sin + (nOriginY + h) * cos;
+            }
         }
 
         SpriteBatchVertex vertex;

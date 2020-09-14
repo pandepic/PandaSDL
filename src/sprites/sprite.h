@@ -33,7 +33,7 @@ namespace PandaSDL
             float Rotation;
             PandaSDL::eSpriteFlip Flip;
             PandaSDL::Color Colour;
-            PandaSDL::Vector2 Center; // todo: support in spritebatch
+            PandaSDL::Vector2 Origin;
             PandaSDL::Rectangle SourceRect;
 
         protected:

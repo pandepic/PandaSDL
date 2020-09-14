@@ -46,6 +46,7 @@ namespace PandaSDL
         Vector2 Position;
         Color Color;
         Vector2 Scale;
+        Vector2 Origin;
         float Rotation;
         PandaSDL::eSpriteFlip Flip;
     };
@@ -73,8 +74,9 @@ namespace PandaSDL
                 Vector2                     position,
                 Color                       color =     PANDASDL_COLOR_WHITE,
                 Vector2                     scale =     Vector2(1.0f, 1.0f),
-                float                       rotation =  0.0f,
-                eSpriteFlip                 flip =      eSpriteFlip::NONE);
+                float                       rotation =  0.0f, // in degrees
+                eSpriteFlip                 flip =      eSpriteFlip::NONE,
+                Vector2                     origin =    Vector2(0.0f, 0.0f));
             
             void Draw(
                 std::shared_ptr<Texture2D>  texture,
@@ -82,8 +84,9 @@ namespace PandaSDL
                 Vector2                     position,
                 Color                       color =     PANDASDL_COLOR_WHITE,
                 Vector2                     scale =     Vector2(1.0f, 1.0f),
-                float                       rotation =  0.0f,
-                eSpriteFlip                 flip =      eSpriteFlip::NONE);
+                float                       rotation =  0.0f, // in degrees
+                eSpriteFlip                 flip =      eSpriteFlip::NONE,
+                Vector2                     origin =    Vector2(0.0f, 0.0f));
             
             void DrawText(
                 std::shared_ptr<SpriteFont> font,
@@ -93,8 +96,9 @@ namespace PandaSDL
                 Color                       color =         PANDASDL_COLOR_WHITE,
                 bool                        alignPosition = false,
                 Vector2                     scale =         Vector2(1.0f, 1.0f),
-                float                       rotation =      0.0f,
-                eSpriteFlip                 flip =          eSpriteFlip::NONE);
+                float                       rotation =      0.0f, // in degrees
+                eSpriteFlip                 flip =          eSpriteFlip::NONE,
+                Vector2                     origin =        Vector2(0.0f, 0.0f));
             
             void End();
             void Clear();
