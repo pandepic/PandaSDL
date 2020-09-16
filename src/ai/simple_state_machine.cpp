@@ -24,7 +24,7 @@ void PandaSDL::SimpleStateMachine::RegisterState(std::shared_ptr<PandaSDL::Simpl
         return;
     
     state->Parent = this;
-    _states.insert(std::pair<std::string, std::shared_ptr<PandaSDL::SimpleStateBase>>(state->Name, state));
+    _states.insert({ state->Name, state });
 }
 
 void PandaSDL::SimpleStateMachine::RemoveState(std::string name)

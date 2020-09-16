@@ -68,7 +68,7 @@ void PandaSDL::AnimationManager::LoadAnimations(std::string animationsFile)
             }
         }
 
-        _animations.insert(std::pair<std::string, std::shared_ptr<PandaSDL::Animation>>(animation->Name, animation));
+        _animations.insert({ animation->Name, animation });
         //std::cout << "Loaded animation " << animation->Name << " - " << animationsFile << std::endl;
     }
 }

@@ -32,13 +32,13 @@ void PandaSDL::SettingsManager::Load(std::string settingsFile)
                 std::string attrName = settingAttr.name();
                 
                 if (attrName != "Name" && attrName != "Value")
-                    newSetting.Attributes.insert(std::pair<std::string, std::string>(attrName, settingAttr.value()));
+                    newSetting.Attributes.insert({ attrName, settingAttr.value() });
             }
             
-            newSection.Settings.insert(std::pair<std::string, PandaSDL::Setting>(newSetting.Name, newSetting));
+            newSection.Settings.insert({ newSetting.Name, newSetting });
         }
         
-        _settingsSections.insert(std::pair<std::string, PandaSDL::SettingsSection>(newSection.Name, newSection));
+        _settingsSections.insert({ newSection.Name, newSection });
     }
 }
 

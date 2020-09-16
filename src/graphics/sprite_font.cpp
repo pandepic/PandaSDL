@@ -48,7 +48,7 @@ std::shared_ptr<PandaSDL::SpriteFontCharacterData> PandaSDL::SpriteFont::GetChar
         
         FT_Set_Pixel_Sizes(newSize->FontFace, 0, size);
         
-        _sizeCache.insert(std::pair<unsigned int, std::shared_ptr<PandaSDL::SpriteFontSizeData>>(size, newSize));
+        _sizeCache.insert({ size, newSize });
     }
     
     auto sizeData = _sizeCache[size];
@@ -103,8 +103,7 @@ std::shared_ptr<PandaSDL::SpriteFontCharacterData> PandaSDL::SpriteFont::GetChar
         newCharacter->SourceRect = PandaSDL::Rectangle(sizeData->NextCharPosition.X, sizeData->NextCharPosition.Y, tempTexture->GetWidth(), tempTexture->GetHeight());
         newCharacter->Whitespace = whitespace;
         
-        sizeData->CharacterCache.insert(std::pair<unsigned char, std::shared_ptr<PandaSDL::SpriteFontCharacterData>>(character, newCharacter));
-        
+        sizeData->CharacterCache.insert({ character, newCharacter });
         sizeData->NextCharPosition.X += tempTexture->GetWidth();
     }
     

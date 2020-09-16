@@ -22,7 +22,7 @@ std::shared_ptr<PandaSDL::Texture2D> PandaSDL::DynamicTextureManager::CreateText
     newTexture->Create(width, height);
 
     id = _texture2DIndexCounter;
-    _texture2DCache.insert(std::pair<unsigned int, std::shared_ptr<PandaSDL::Texture2D>>(_texture2DIndexCounter, newTexture));
+    _texture2DCache.insert({ _texture2DIndexCounter, newTexture });
     _texture2DIndexCounter += 1;
 
     return newTexture;

@@ -34,7 +34,7 @@ void PandaSDL::AssetManager::LoadAssets(std::string assetsFile)
         asset.Name = node.attribute("Name").value();
         asset.Filepath = node.attribute("Filepath").value();
 
-        _assets.insert(std::pair<std::string, PandaSDL::Asset>(asset.Name, asset));
+        _assets.insert({ asset.Name, asset });
 
         //std::cout << "Loaded asset " << asset.Name << " - " << asset.Filepath << std::endl;
     }
@@ -83,7 +83,7 @@ std::shared_ptr<PandaSDL::Texture2D> PandaSDL::AssetManager::LoadTexture2D(std::
         newTexture = tempTexture;
     }
 
-    _textureCache.insert(std::pair<std::string, std::shared_ptr<Texture2D>>(asset, newTexture));
+    _textureCache.insert({ asset, newTexture });
 
     //std::cout << "Loaded Texture2D " << asset << std::endl;
     
@@ -156,7 +156,7 @@ std::shared_ptr<PandaSDL::Shader> PandaSDL::AssetManager::LoadShaderFromString(s
     auto newShader = std::make_shared<PandaSDL::Shader>();
     newShader->Compile(vertexCode.c_str(), fragmentCode.c_str(), geometryCode.length() > 0 ? geometryCode.c_str() : nullptr);
     
-    _shaderCache.insert(std::pair<std::string, std::shared_ptr<PandaSDL::Shader>>(name, newShader));
+    _shaderCache.insert({ name, newShader });
 
     //std::cout << "Loaded Shader " << name << std::endl;
     return newShader;
@@ -186,7 +186,7 @@ std::shared_ptr<PandaSDL::SpriteFont> PandaSDL::AssetManager::LoadSpritefont(std
     auto newFont = std::make_shared<PandaSDL::SpriteFont>();
     newFont->Create(filepath);
     
-    _fontCache.insert(std::pair<std::string, std::shared_ptr<PandaSDL::SpriteFont>>(asset, newFont));
+    _fontCache.insert({ asset, newFont });
     
     //std::cout << "Loaded SpriteFont " << asset << std::endl;
     return newFont;
@@ -216,7 +216,7 @@ std::shared_ptr<PandaSDL::TiledMap> PandaSDL::AssetManager::LoadTiledMap(std::st
     auto newTMX = std::make_shared<PandaSDL::TiledMap>();
     newTMX->Load(filepath);
     
-    _tiledCache.insert(std::pair<std::string, std::shared_ptr<PandaSDL::TiledMap>>(asset, newTMX));
+    _tiledCache.insert({ asset, newTMX });
     
     //std::cout << "Loaded Tiled Map " << asset << std::endl;
     return newTMX;
