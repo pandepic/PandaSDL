@@ -4,6 +4,7 @@ FT_Library PandaSDL::SpriteFont::_ftLibrary = FT_Library();
 bool PandaSDL::SpriteFont::_ftInit = false;
 
 PandaSDL::SpriteFont::SpriteFont()
+    : _maxTextureSize(2048)
 {
 }
 
@@ -21,6 +22,8 @@ void PandaSDL::SpriteFont::Create(std::string filepath)
     PandaSDL::SpriteFont::InitFT();
     
     _filepath = filepath;
+    
+    _maxTextureSize = PandaSDL::GraphicsPlatform::GetMaxTextureSize();
 }
 
 void PandaSDL::SpriteFont::InitFT()
@@ -41,7 +44,7 @@ std::shared_ptr<PandaSDL::SpriteFontCharacterData> PandaSDL::SpriteFont::GetChar
         auto newSize = std::make_shared<PandaSDL::SpriteFontSizeData>();
         newSize->Size = size;
         newSize->NextCharPosition = PandaSDL::Vector2::Zero();
-        newSize->Texture = PandaSDL::Game::DynamicTextureManager.CreateTexture2D(PANDASDL_FONT_TEXTURE_MAXWIDTH, PANDASDL_FONT_TEXTURE_MAXHEIGHT);
+        newSize->Texture = PandaSDL::Game::DynamicTextureManager.CreateTexture2D(_maxTextureSize, _maxTextureSize);
         
         if (FT_New_Face(PandaSDL::SpriteFont::_ftLibrary, _filepath.c_str(), 0, &newSize->FontFace))
             PandaSDL::ThrowException(PandaSDL::ePandaSDLException::FREETYPE_LOADFONT_FAILED);
@@ -61,13 +64,13 @@ std::shared_ptr<PandaSDL::SpriteFontCharacterData> PandaSDL::SpriteFont::GetChar
         auto tempTexture = std::make_shared<PandaSDL::Texture2D>(GL_RED, GL_LINEAR, GL_CLAMP_TO_EDGE);
         tempTexture->Create(sizeData->FontFace->glyph->bitmap.width, sizeData->FontFace->glyph->bitmap.rows, sizeData->FontFace->glyph->bitmap.buffer);
         
-        if ((sizeData->NextCharPosition.X + tempTexture->GetWidth()) > PANDASDL_FONT_TEXTURE_MAXWIDTH)
+        if ((sizeData->NextCharPosition.X + tempTexture->GetWidth()) > _maxTextureSize)
         {
             sizeData->NextCharPosition.X = 0;
             sizeData->NextCharPosition.Y += size;
             
             // todo : handle the case where there are too many glyphs for the texture size
-            if ((sizeData->NextCharPosition.Y + size) > PANDASDL_FONT_TEXTURE_MAXHEIGHT)
+            if ((sizeData->NextCharPosition.Y + size) > _maxTextureSize)
                 PandaSDL::ThrowException(PandaSDL::ePandaSDLException::SPRITEFONT_MAX_TEXTURE_SIZE_REACHED);
         }
         

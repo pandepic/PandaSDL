@@ -13,6 +13,15 @@
 #define PANDASDL_QUAD_VERTEX_FLOAT_COUNT (PANDASDL_QUAD_VERTEX_COUNT * 2)
 #define PANDASDL_TILEBATCH_QUAD_VERTEX_FLOAT_COUNT 24
 
+#define PANDASDL_GAME PandaSDL::Game
+#define PANDASDL_GAME_INSTANCE PandaSDL::Game::GameInstance
+#define PANDASDL_ASSET_MANAGER PandaSDL::Game::AssetManager
+#define PANDASDL_DYNAMIC_TEXTURE_MANAGER PandaSDL::Game::DynamicTextureManager
+#define PANDASDL_SETTINGS_MANAGER PandaSDL::Game::SettingsManager
+#define PANDASDL_GAME_CONTROL_MANAGER PandaSDL::Game::GameControlManager
+#define PANDASDL_ANIMATION_MANAGER PandaSDL::Game::AnimationManager
+#define PANDASDL_INPUT_MANAGER PandaSDL::Game::InputManager
+
 namespace PandaSDL
 {
     enum class eGameControlType
@@ -127,6 +136,7 @@ namespace PandaSDL
         PRIMITIVEBATCH_BEGIN,
         PRIMITIVEBATCH_DRAW,
         GRAPHICS_BUFFER,
+        MENU_LOADING_FAILED,
     };
 
     static std::map<ePandaSDLException, std::string> PandaSDLExceptionNames =
@@ -153,7 +163,8 @@ namespace PandaSDL
         { ePandaSDLException::PRIMITIVEBATCH_SETUP, "PRIMITIVEBATCH_SETUP" },
         { ePandaSDLException::PRIMITIVEBATCH_BEGIN, "PRIMITIVEBATCH_BEGIN" },
         { ePandaSDLException::PRIMITIVEBATCH_DRAW, "PRIMITIVEBATCH_DRAW" },
-        { ePandaSDLException::GRAPHICS_BUFFER, "GRAPHICS_BUFFER" }
+        { ePandaSDLException::GRAPHICS_BUFFER, "GRAPHICS_BUFFER" },
+        { ePandaSDLException::MENU_LOADING_FAILED, "MENU_LOADING_FAILED" }
     };
 
     static void ThrowException(ePandaSDLException type, std::string message = "")

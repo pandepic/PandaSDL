@@ -91,16 +91,16 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
     // pre calculate index buffer
     for (int i = 0; i < _maxBatchSize; i++)
     {
-        auto startIndex = i * PANDASDL_QUAD_INDEX_COUNT;
-        auto offset = i * PANDASDL_QUAD_VERTEX_COUNT;
-        
-        indices[startIndex + 0] = indicesTemplate[0] + offset;
-        indices[startIndex + 1] = indicesTemplate[1] + offset;
-        indices[startIndex + 2] = indicesTemplate[2] + offset;
-            
-        indices[startIndex + 3] = indicesTemplate[3] + offset;
-        indices[startIndex + 4] = indicesTemplate[4] + offset;
-        indices[startIndex + 5] = indicesTemplate[5] + offset;
+       auto startIndex = i * PANDASDL_QUAD_INDEX_COUNT;
+       auto offset = i * PANDASDL_QUAD_VERTEX_COUNT;
+       
+       indices[startIndex + 0] = indicesTemplate[0] + offset;
+       indices[startIndex + 1] = indicesTemplate[1] + offset;
+       indices[startIndex + 2] = indicesTemplate[2] + offset;
+           
+       indices[startIndex + 3] = indicesTemplate[3] + offset;
+       indices[startIndex + 4] = indicesTemplate[4] + offset;
+       indices[startIndex + 5] = indicesTemplate[5] + offset;
     }
     
     _vao = std::make_unique<VertexArrayObject>(true);

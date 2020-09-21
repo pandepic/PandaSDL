@@ -3,7 +3,7 @@
 
 #include "../../lib_include/pugixml/pugixml.hpp"
 
-#include "puiframe.h"
+#include "puiwidget_container.h"
 #include "../math/rectangle.h"
 #include "../general/timer.h"
 
@@ -20,19 +20,23 @@ namespace PandaSDL
         int SetX, SetY;
     };
     
+    // forward declarations
+    class PUIWidgetContainer;
+    
     class PUIWidget
     {
         public:
             PUIWidget();
             ~PUIWidget();
             
-            virtual void Load(std::shared_ptr<PUIFrame> parent, pugi::xml_node node);
+            std::string Name;
+            
+            virtual void Load(PUIWidgetContainer *parent, pugi::xml_node &node);
             virtual void Update(const PandaSDL::Timer &gameTimer) = 0;
             
         protected:
+            PUIWidgetContainer *_parent;
             pugi::xml_node _template;
-            pugi::xml_node _node;
-            std::shared_ptr<PUIFrame> _parent;
             Rectangle _widgetRect;
             
             void LoadTemplate();

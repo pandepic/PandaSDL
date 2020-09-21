@@ -11,9 +11,6 @@
 #include "frame_buffer.h"
 #include "sprite_batch.h"
 
-#define PANDASDL_FONT_TEXTURE_MAXWIDTH 2000
-#define PANDASDL_FONT_TEXTURE_MAXHEIGHT 1000
-
 namespace PandaSDL
 {
     struct SpriteFontCharacterData
@@ -63,6 +60,7 @@ namespace PandaSDL
             std::string _filepath;
             std::map<unsigned int, std::shared_ptr<SpriteFontSizeData>> _sizeCache;
             std::vector<unsigned int> _textureIDs;
+            int _maxTextureSize;
 
             static void InitFT();
             static FT_Library _ftLibrary;

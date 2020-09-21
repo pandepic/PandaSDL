@@ -9,9 +9,9 @@ PandaSDL::PUIWidget::~PUIWidget()
 {
 }
 
-void PandaSDL::PUIWidget::Load(std::shared_ptr<PUIFrame> parent, pugi::xml_node node)
+void PandaSDL::PUIWidget::Load(PUIWidgetContainer *parent, pugi::xml_node &node)
 {
-    // _node = node;
+    _parent = parent;
     
     // auto name = node.attribute("Name").value();
     // PandaSDL::Vector2 position = { node.child("Position").attribute("X").as_int() };

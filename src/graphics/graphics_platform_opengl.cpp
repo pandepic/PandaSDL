@@ -204,9 +204,16 @@ void PandaSDL::GraphicsPlatform::SetPixelStorageUnpackAlignment(int value)
     glPixelStorei(GL_UNPACK_ALIGNMENT, value);
 }
 
-std::string GetVersion()
+std::string PandaSDL::GraphicsPlatform::GetVersion()
 {
     return std::string(reinterpret_cast<const char *>(glGetString(GL_VERSION)));
+}
+
+int PandaSDL::GraphicsPlatform::GetMaxTextureSize()
+{
+    int size;
+    glGetIntegerv(GL_MAX_TEXTURE_SIZE, &size);
+    return size;
 }
 
 void PandaSDL::GraphicsPlatform::EnableDebugOutput()
