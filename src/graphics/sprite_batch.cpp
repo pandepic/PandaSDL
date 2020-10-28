@@ -78,7 +78,7 @@ void PandaSDL::SpriteBatch::Setup(int screenWidth, int screenHeight, bool invert
         _projection = glm::ortho(0.0f, (float)_screenWidth, 0.0f, (float)_screenHeight, -1.0f, 1.0f);
     else
         _projection = glm::ortho(0.0f, (float)_screenWidth, (float)_screenHeight, 0.0f, -1.0f, 1.0f);
-
+    
     _spriteShader->Use().SetInteger("image", 0);
     
     unsigned int indicesTemplate[PANDASDL_QUAD_INDEX_COUNT] = {
